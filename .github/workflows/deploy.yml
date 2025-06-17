@@ -35,12 +35,15 @@ jobs:
         run: |
           # Replace placeholder with actual weather API key from secrets
           if [ -n "$WEATHER_API_KEY" ]; then
-            sed -i "s/WEATHER_API_KEY_PLACEHOLDER/$WEATHER_API_KEY/g" index.html
+            sed -i "s/WEATHER_API_KEY_PLACEHOLDER/$WEATHER_API_KEY/g" public/index.html
           else
             echo "Warning: WEATHER_API_KEY secret not set"
           fi
         env:
           WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+
+      - name: Build Tailwind CSS
+        run: npm run build:css
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

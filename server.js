@@ -6,15 +6,9 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware to serve static files
-app.use(express.static('public'));
-
-// Serve images from the /images directory
-app.use('/images', express.static(path.join(__dirname, 'images')));
-
 // Serve the main HTML file with environment variable substitution
 app.get('/', (req, res) => {
-  const htmlPath = path.join(__dirname, 'index.html');
+  const htmlPath = path.join(__dirname, 'public', 'index.html');
 
   fs.readFile(htmlPath, 'utf8', (err, data) => {
     if (err) {
@@ -32,6 +26,9 @@ app.get('/', (req, res) => {
     res.send(modifiedHtml);
   });
 });
+
+// Middleware to serve static files from public (including images and index.html)
+app.use(express.static('public'));
 
 app.listen(PORT, () => {
   console.log(`🌤️  Wrangler Weather server running at http://localhost:${PORT}`);

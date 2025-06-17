@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "npm run build:css && nodemon --watch public/**/*.js --watch public/**/*.html --watch public/**/*.css server.js",
+    "build:css": "npx @tailwindcss/cli -i ./input.css -o ./public/index.css --minify"
   },
   "keywords": [
     "weather",
@@ -15,13 +16,17 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "@tailwindcss/cli": "^4.1.10",
+    "autoprefixer": "^10.4.21",
+    "nodemon": "^3.0.1",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.10"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": "18.x"
   }
 }

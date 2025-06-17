@@ -4,33 +4,53 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wrangler Weather</title>
+    <link href="/index.css" rel="stylesheet" />
     <script>
       // Weather API configuration - using OpenWeatherMap API
       const WEATHER_API_KEY = "WEATHER_API_KEY_PLACEHOLDER"; // This will be replaced during build
 
+      // Configurable weather thresholds for Jeep recommendations
+      // Minimum temperature (°F) for top off recommendation
+      const TEMP_THRESHOLD_TOP_OFF = 60;
+      // Minimum temperature (°F) for doors off recommendation
+      const TEMP_THRESHOLD_DOORS_OFF = 65;
+      // Maximum rain chance (%) for any recommendation
+      const RAIN_CHANCE_THRESHOLD = 10;
+      // Maximum wind speed (mph) for doors off recommendation
+      const WIND_SPEED_THRESHOLD = 15;
+
       async function fetchWeather(lat, lon) {
+        console.log("fetchWeather called with lat:", lat, "lon:", lon);
         if (
           !WEATHER_API_KEY ||
           WEATHER_API_KEY === "WEATHER_API_KEY_PLACEHOLDER"
         ) {
+          console.log("Weather API key not configured.");
           throw new Error(
             "Weather API key not configured. Please check your .env file or GitHub secrets."
           );
         }
 
         const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=imperial`;
+        console.log("Fetching weather from URL:", url);
         const res = await fetch(url);
+        console.log("Fetch response status:", res.status, res.statusText);
         if (!res.ok) {
+          console.log("Failed to fetch weather data.");
           throw new Error(
             `Failed to fetch weather: ${res.status} ${res.statusText}`
           );
         }
-        return res.json();
+        const data = await res.json();
+        console.log("Weather data received:", data);
+        return data;
       }
 
       function evaluateConditions(weather) {
+        console.log("evaluateConditions called with weather:", weather);
         // Extract city name from the weather data
-        const cityName = weather.city ? weather.city.name : 'Unknown Location';
+        const cityName = weather.city ? weather.city.name : "Unknown Location";
+        console.log("City name:", cityName);
 
         // OpenWeatherMap forecast data - analyze today's hourly data
         const now = new Date();
@@ -40,16 +60,22 @@
           now.getDate()
         );
         const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
+        console.log("Today start:", todayStart, "Today end:", todayEnd);
 
         // Filter forecasts for today
         const todayForecasts = weather.list.filter((forecast) => {
           const forecastTime = new Date(forecast.dt * 1000);
           return forecastTime >= todayStart && forecastTime < todayEnd;
         });
+        console.log("Forecasts for today:", todayForecasts);
 
         if (todayForecasts.length === 0) {
           // If no forecasts for today, use the first few available
           todayForecasts.push(...weather.list.slice(0, 8));
+          console.log(
+            "No forecasts for today, using first 8 available:",
+            todayForecasts
+          );
         }
 
         let maxTemp = -Infinity;
@@ -57,7 +83,9 @@
         let maxWind = -Infinity;
 
         for (const forecast of todayForecasts) {
-          maxTemp = Math.max(maxTemp, Math.round(forecast.main.temp));
+          const temp = Math.round(forecast.main.temp);
+          maxTemp = Math.max(maxTemp, temp);
+          console.log("Forecast temp:", temp, "Current maxTemp:", maxTemp);
 
           // Calculate rain chance from weather conditions
           let rainChance = 0;
@@ -70,13 +98,43 @@
             }
           }
           maxRainChance = Math.max(maxRainChance, rainChance);
+          console.log(
+            "Forecast rainChance:",
+            rainChance,
+            "Current maxRainChance:",
+            maxRainChance
+          );
 
           // Convert m/s to mph
-          maxWind = Math.max(maxWind, Math.round(forecast.wind.speed * 2.237));
+          const windMph = Math.round(forecast.wind.speed * 2.237);
+          maxWind = Math.max(maxWind, windMph);
+          console.log(
+            "Forecast wind (mph):",
+            windMph,
+            "Current maxWind:",
+            maxWind
+          );
         }
 
-        const topOff = maxTemp >= 60 && maxRainChance < 10;
-        const doorsOff = maxTemp >= 65 && maxRainChance < 10 && maxWind < 15;
+        const topOff =
+          maxTemp >= TEMP_THRESHOLD_TOP_OFF &&
+          maxRainChance < RAIN_CHANCE_THRESHOLD;
+        const doorsOff =
+          maxTemp >= TEMP_THRESHOLD_DOORS_OFF &&
+          maxRainChance < RAIN_CHANCE_THRESHOLD &&
+          maxWind < WIND_SPEED_THRESHOLD;
+        console.log(
+          "topOff:",
+          topOff,
+          "doorsOff:",
+          doorsOff,
+          "maxTemp:",
+          maxTemp,
+          "maxRainChance:",
+          maxRainChance,
+          "maxWind:",
+          maxWind
+        );
 
         return {
           topOff,
@@ -88,16 +146,37 @@
         };
       }
 
-      function renderResult({ topOff, doorsOff, maxTemp, minRain, maxWind, cityName }) {
+      function renderResult({
+        topOff,
+        doorsOff,
+        maxTemp,
+        minRain,
+        maxWind,
+        cityName,
+      }) {
+        console.log("renderResult called with:", {
+          topOff,
+          doorsOff,
+          maxTemp,
+          minRain,
+          maxWind,
+          cityName,
+        });
         // Generate image filename based on top and doors status
         const topStatus = topOff ? "off" : "on";
         const doorsStatus = doorsOff ? "off" : "on";
         const imageName = `top${topStatus}-doors${doorsStatus}.png`;
         const imagePath = `/images/${imageName}`;
+        console.log("Image selected:", imagePath);
 
         document.getElementById("result").innerHTML = `
-        <div class="font-semibold text-xl">Today's Wrangler Weather</div>
-        <div class="mt-1 mb-4 text-gray-600 text-sm">${cityName}</div>
+        <h1 class="mb-4 font-bold text-2xl text-center">Today's Wrangler Weather for ${cityName}</h1>
+        <div class="mt-6 text-center">
+          <img src="${imagePath}" alt="Jeep with top ${topStatus} and doors ${doorsStatus}"
+               class="shadow-md mx-auto rounded-lg max-w-full h-auto"
+               style="max-height: 300px;"
+               onerror="this.style.display='none'">
+        </div>
         <div class="mt-4">
           <p><strong>Max Temperature:</strong> ${maxTemp}°F</p>
           <p><strong>Rain Chance:</strong> ${minRain}%</p>
@@ -111,23 +190,20 @@
             doorsOff ? "Yes" : "No"
           }</p>
         </div>
-        <div class="mt-6 text-center">
-          <img src="${imagePath}" alt="Jeep with top ${topStatus} and doors ${doorsStatus}"
-               class="shadow-md mx-auto rounded-lg max-w-full h-auto"
-               style="max-height: 300px;"
-               onerror="this.style.display='none'">
-        </div>
       `;
       }
 
       function showError(error) {
+        console.log("showError called with:", error);
         document.getElementById(
           "result"
         ).textContent = `Error: ${error.message}`;
       }
 
       function getLocationAndFetchWeather() {
+        console.log("getLocationAndFetchWeather called");
         if (!navigator.geolocation) {
+          console.log("Geolocation not supported");
           showError(new Error("Geolocation not supported"));
           return;
         }
@@ -136,28 +212,34 @@
           async (position) => {
             try {
               const { latitude, longitude } = position.coords;
+              console.log(
+                "Geolocation success. Latitude:",
+                latitude,
+                "Longitude:",
+                longitude
+              );
               const weather = await fetchWeather(latitude, longitude);
               const conditions = evaluateConditions(weather);
               renderResult(conditions);
             } catch (e) {
+              console.log("Error in geolocation or weather fetch:", e);
               showError(e);
             }
           },
-          (err) => {
-            showError(new Error("Failed to get location"));
+          (error) => {
+            console.log("Geolocation error:", error);
+            showError(error);
           }
         );
       }
 
       window.onload = getLocationAndFetchWeather;
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100 p-4 font-sans text-gray-900">
     <div
       class="bg-white shadow-md mx-auto mt-10 p-6 rounded-xl max-w-md overflow-hidden"
     >
-      <h1 class="mb-4 font-bold text-2xl text-center">Wrangler Weather</h1>
       <div id="result" class="text-center">Loading...</div>
     </div>
   </body>
