@@ -21,10 +21,7 @@
 
       async function fetchWeather(lat, lon) {
         console.log("fetchWeather called with lat:", lat, "lon:", lon);
-        if (
-          !WEATHER_API_KEY ||
-          WEATHER_API_KEY === "WEATHER_API_KEY_PLACEHOLDER"
-        ) {
+        if (!WEATHER_API_KEY) {
           console.log("Weather API key not configured.");
           throw new Error(
             "Weather API key not configured. Please check your .env file or GitHub secrets."
