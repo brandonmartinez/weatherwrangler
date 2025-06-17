@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "npm run build:css && nodemon --watch public/**/*.js --watch public/**/*.html --watch public/**/*.css server.js",
-    "build:css": "npx @tailwindcss/cli -i ./input.css -o ./public/index.css --minify"
+    "build:css": "npx @tailwindcss/cli -i ./public/input.css -o ./public/index.css --minify"
   },
   "keywords": [
     "weather",
