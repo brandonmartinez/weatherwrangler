@@ -20,34 +20,45 @@
       const WIND_SPEED_THRESHOLD = 15;
 
       async function fetchWeather(lat, lon) {
-        console.log("fetchWeather called with lat:", lat, "lon:", lon);
         if (!WEATHER_API_KEY) {
-          console.log("Weather API key not configured.");
           throw new Error(
             "Weather API key not configured. Please check your .env file or GitHub secrets."
           );
         }
 
         const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=imperial`;
-        console.log("Fetching weather from URL:", url);
         const res = await fetch(url);
-        console.log("Fetch response status:", res.status, res.statusText);
         if (!res.ok) {
-          console.log("Failed to fetch weather data.");
           throw new Error(
             `Failed to fetch weather: ${res.status} ${res.statusText}`
           );
         }
         const data = await res.json();
-        console.log("Weather data received:", data);
+        return data;
+      }
+
+      async function fetchWeatherByZip(zipCode) {
+        if (!WEATHER_API_KEY) {
+          throw new Error(
+            "Weather API key not configured. Please check your .env file or GitHub secrets."
+          );
+        }
+
+        const url = `https://api.openweathermap.org/data/2.5/forecast?zip=${zipCode}&appid=${WEATHER_API_KEY}&units=imperial`;
+        const res = await fetch(url);
+        if (!res.ok) {
+          throw new Error(
+            `Failed to fetch weather for zip ${zipCode}: ${res.status} ${res.statusText}`
+          );
+        }
+        localStorage.setItem("weatherLocation", JSON.stringify({ zipCode }));
+        const data = await res.json();
         return data;
       }
 
       function evaluateConditions(weather) {
-        console.log("evaluateConditions called with weather:", weather);
         // Extract city name from the weather data
         const cityName = weather.city ? weather.city.name : "Unknown Location";
-        console.log("City name:", cityName);
 
         // OpenWeatherMap forecast data - analyze today's hourly data
         const now = new Date();
@@ -57,22 +68,16 @@
           now.getDate()
         );
         const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
-        console.log("Today start:", todayStart, "Today end:", todayEnd);
 
         // Filter forecasts for today
         const todayForecasts = weather.list.filter((forecast) => {
           const forecastTime = new Date(forecast.dt * 1000);
           return forecastTime >= todayStart && forecastTime < todayEnd;
         });
-        console.log("Forecasts for today:", todayForecasts);
 
         if (todayForecasts.length === 0) {
           // If no forecasts for today, use the first few available
           todayForecasts.push(...weather.list.slice(0, 8));
-          console.log(
-            "No forecasts for today, using first 8 available:",
-            todayForecasts
-          );
         }
 
         let maxTemp = -Infinity;
@@ -82,7 +87,6 @@
         for (const forecast of todayForecasts) {
           const temp = Math.round(forecast.main.temp);
           maxTemp = Math.max(maxTemp, temp);
-          console.log("Forecast temp:", temp, "Current maxTemp:", maxTemp);
 
           // Calculate rain chance from weather conditions
           let rainChance = 0;
@@ -95,22 +99,10 @@
             }
           }
           maxRainChance = Math.max(maxRainChance, rainChance);
-          console.log(
-            "Forecast rainChance:",
-            rainChance,
-            "Current maxRainChance:",
-            maxRainChance
-          );
 
           // Convert m/s to mph
           const windMph = Math.round(forecast.wind.speed * 2.237);
           maxWind = Math.max(maxWind, windMph);
-          console.log(
-            "Forecast wind (mph):",
-            windMph,
-            "Current maxWind:",
-            maxWind
-          );
         }
 
         const topOff =
@@ -120,18 +112,6 @@
           maxTemp >= TEMP_THRESHOLD_DOORS_OFF &&
           maxRainChance < RAIN_CHANCE_THRESHOLD &&
           maxWind < WIND_SPEED_THRESHOLD;
-        console.log(
-          "topOff:",
-          topOff,
-          "doorsOff:",
-          doorsOff,
-          "maxTemp:",
-          maxTemp,
-          "maxRainChance:",
-          maxRainChance,
-          "maxWind:",
-          maxWind
-        );
 
         return {
           topOff,
@@ -151,53 +131,94 @@
         maxWind,
         cityName,
       }) {
-        console.log("renderResult called with:", {
-          topOff,
-          doorsOff,
-          maxTemp,
-          minRain,
-          maxWind,
-          cityName,
-        });
         // Generate image filename based on top and doors status
         const topStatus = topOff ? "off" : "on";
         const doorsStatus = doorsOff ? "off" : "on";
         const imageName = `top${topStatus}-doors${doorsStatus}.png`;
         const imagePath = `/images/${imageName}`;
-        console.log("Image selected:", imagePath);
 
-        document.getElementById("result").innerHTML = `
+        const headerHTML = `
         <h1 class="mb-4 font-bold text-2xl text-center">Today's Wrangler Weather for ${cityName}</h1>
+        `;
+
+        const imageHTML = `
         <div class="mt-6 text-center">
           <img src="${imagePath}" alt="Jeep with top ${topStatus} and doors ${doorsStatus}"
                class="shadow-md mx-auto rounded-lg max-w-full h-auto"
                style="max-height: 300px;"
                onerror="this.style.display='none'">
         </div>
+        `;
+
+        const detailsHTML = `
         <div class="mt-4">
           <p><strong>Max Temperature:</strong> ${maxTemp}°F</p>
           <p><strong>Rain Chance:</strong> ${minRain}%</p>
           <p><strong>Max Wind Speed:</strong> ${maxWind} MPH</p>
         </div>
+        `;
+
+        const statusHTML = `
         <div class="mt-6">
           <p class="font-bold text-green-600">Top: ${topOff ? "Off" : "On"}</p>
-          <p class="font-bold text-green-600">Doors: ${doorsOff ? "Off" : "On"}</p>
+          <p class="font-bold text-green-600">Doors: ${
+            doorsOff ? "Off" : "On"
+          }</p>
         </div>
-      `;
+        `;
+
+        const resultHTML = headerHTML + imageHTML + detailsHTML + statusHTML;
+
+        document.getElementById("result").innerHTML = resultHTML;
+
+        document
+          .getElementById("useCurrentLocation")
+          .addEventListener("click", () => {
+            // Clear stored location to force fresh location request
+            document.getElementById("zipcode").value = "";
+            localStorage.removeItem("weatherLocation");
+            getLocationAndFetchWeather();
+          });
+      }
+
+      function showLocationForm() {
+        document.getElementById("result").innerHTML = `
+          <h1 class="mb-4 font-bold text-2xl text-center">Wrangler Weather</h1>
+          <p class="mb-4 text-center text-gray-600">Please enter your location to get weather recommendations</p>
+        `;
       }
 
       function showError(error) {
-        console.log("showError called with:", error);
         document.getElementById(
           "result"
         ).textContent = `Error: ${error.message}`;
       }
 
       function getLocationAndFetchWeather() {
-        console.log("getLocationAndFetchWeather called");
+        // Check if location is stored in localStorage
+        const storedLocation = localStorage.getItem("weatherLocation");
+        if (storedLocation) {
+          const { latitude, longitude, zipCode } = JSON.parse(storedLocation);
+          if (zipCode) {
+            fetchWeatherByZip(zipCode)
+              .then((weather) => {
+                const conditions = evaluateConditions(weather);
+                renderResult(conditions);
+              })
+              .catch((e) => showError(e));
+          } else if (latitude && longitude) {
+            fetchWeather(latitude, longitude)
+              .then((weather) => {
+                const conditions = evaluateConditions(weather);
+                renderResult(conditions);
+              })
+              .catch((e) => showError(e));
+          } // else, proceed (do nothing here)
+          return;
+        }
+
         if (!navigator.geolocation) {
-          console.log("Geolocation not supported");
-          showError(new Error("Geolocation not supported"));
+          showLocationForm();
           return;
         }
 
@@ -205,23 +226,20 @@
           async (position) => {
             try {
               const { latitude, longitude } = position.coords;
-              console.log(
-                "Geolocation success. Latitude:",
-                latitude,
-                "Longitude:",
-                longitude
+              // Store location in localStorage
+              localStorage.setItem(
+                "weatherLocation",
+                JSON.stringify({ latitude, longitude })
               );
               const weather = await fetchWeather(latitude, longitude);
               const conditions = evaluateConditions(weather);
               renderResult(conditions);
             } catch (e) {
-              console.log("Error in geolocation or weather fetch:", e);
               showError(e);
             }
           },
           (error) => {
-            console.log("Geolocation error:", error);
-            showError(error);
+            showLocationForm();
           }
         );
       }
@@ -230,10 +248,64 @@
     </script>
   </head>
   <body class="bg-gray-100 p-4 font-sans text-gray-900">
-    <div
-      class="bg-white shadow-md mx-auto mt-10 p-6 rounded-xl max-w-md overflow-hidden"
-    >
-      <div id="result" class="text-center">Loading...</div>
+    <div class="container">
+      <div
+        class="bg-white shadow-md mx-auto mt-10 p-6 rounded-xl max-w-md overflow-hidden"
+      >
+        <div id="result" class="text-center">Loading...</div>
+      </div>
+      <div
+        id="location"
+        class="bg-white shadow-md mx-auto mt-10 p-6 rounded-xl max-w-md overflow-hidden"
+      >
+        <form id="locationForm">
+          <label for="zipcode" class="block font-medium text-gray-700 text-sm"
+            >Change Location (Zip Code):</label
+          >
+          <div class="mt-1">
+            <input
+              type="text"
+              id="zipcode"
+              name="zipcode"
+              class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+              placeholder="Enter Zip Code"
+            />
+          </div>
+          <input
+            type="button"
+            id="useCurrentLocation"
+            class="bg-gray-400 hover:bg-green-700 shadow-md mt-2 px-4 py-2 rounded-md text-white"
+            value="Use Current Location"
+          />
+
+          <button
+            type="submit"
+            class="bg-indigo-600 mt-2 px-4 py-2 rounded-md text-white"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
     </div>
+    <script>
+      // Add event handler for locationForm submission
+      document
+        .getElementById("locationForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const zipCode = document.getElementById("zipcode").value;
+          if (!zipCode) {
+            alert("Please enter a valid zip code.");
+            return;
+          }
+          try {
+            const weather = await fetchWeatherByZip(zipCode);
+            const conditions = evaluateConditions(weather);
+            renderResult(conditions);
+          } catch (e) {
+            showError(e);
+          }
+        });
+    </script>
   </body>
 </html>
