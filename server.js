@@ -9,6 +9,9 @@ const PORT = process.env.PORT || 3000;
 // Middleware to serve static files
 app.use(express.static('public'));
 
+// Serve images from the /images directory
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 // Serve the main HTML file with environment variable substitution
 app.get('/', (req, res) => {
   const htmlPath = path.join(__dirname, 'index.html');
