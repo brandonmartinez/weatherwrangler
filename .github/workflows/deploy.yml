@@ -32,19 +32,18 @@ jobs:
       - name: Install dependencies (for potential future build steps)
         run: npm ci || echo "No package-lock.json found, skipping npm ci"
 
-      - name: Process HTML with environment variables
+      - name: Build
+        run: npm run build
+
+      - name: Post-process index.html
         run: |
-          # Replace placeholder with actual weather API key from secrets
           if [ -n "$WEATHER_API_KEY" ]; then
-            sed -i "s/WEATHER_API_KEY_PLACEHOLDER/$WEATHER_API_KEY/g" public/index.html
+            sed -i "s/WEATHER_API_KEY_PLACEHOLDER/$WEATHER_API_KEY/g" _build/index.html
           else
             echo "Warning: WEATHER_API_KEY secret not set"
           fi
         env:
           WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
-
-      - name: Build Tailwind CSS
-        run: npm run build:css
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -52,7 +51,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "_build"
 
   deploy:
     environment:

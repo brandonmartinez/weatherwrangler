@@ -136,3 +136,4 @@ dist
 .pnp.*
 .DS_Store
 public/index.css
+_build/
