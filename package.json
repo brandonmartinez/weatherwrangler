@@ -1,0 +1,27 @@
+{
+  "name": "wrangler-weather",
+  "version": "1.0.0",
+  "description": "A simple web app to tell you how to drive your Jeep Wrangler based on today's weather conditions",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "weather",
+    "jeep",
+    "wrangler"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

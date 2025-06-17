@@ -1,0 +1,17 @@
+{
+    "name": "wranglerweather",
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+    "postCreateCommand": "bash .devcontainer/postCreateCommand.sh",
+    "forwardPorts": [
+        3030
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "esbenp.prettier-vscode",
+                "bradlc.vscode-tailwindcss",
+                "dejmedus.tailwind-sorter"
+            ]
+        }
+    }
+}
