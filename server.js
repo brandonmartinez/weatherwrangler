@@ -31,6 +31,6 @@ app.get('/', (req, res) => {
 app.use(express.static('public'));
 
 app.listen(PORT, () => {
-  console.log(`🌤️  Wrangler Weather server running at http://localhost:${PORT}`);
+  console.log(`🌤️  Weather Wrangler server running at http://localhost:${PORT}`);
   console.log(`📝 Make sure to add your WEATHER_API_KEY to the .env file`);
 });

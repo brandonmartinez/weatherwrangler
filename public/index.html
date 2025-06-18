@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wrangler Weather</title>
+    <title>Weather Wrangler</title>
     <link href="/index.css" rel="stylesheet" />
     <script>
       // Weather API configuration - using OpenWeatherMap API
@@ -138,7 +138,7 @@
         const imagePath = `/images/${imageName}`;
 
         const headerHTML = `
-        <h1 class="mb-4 font-bold text-2xl text-center">Today's Wrangler Weather for ${cityName}</h1>
+        <h1 class="mb-4 font-bold text-2xl text-center">Today's Weather Wrangler for ${cityName}</h1>
         `;
 
         const imageHTML = `
@@ -183,7 +183,7 @@
 
       function showLocationForm() {
         document.getElementById("result").innerHTML = `
-          <h1 class="mb-4 font-bold text-2xl text-center">Wrangler Weather</h1>
+          <h1 class="mb-4 font-bold text-2xl text-center">Weather Wrangler</h1>
           <p class="mb-4 text-center text-gray-600">Please enter your location to get weather recommendations</p>
         `;
       }

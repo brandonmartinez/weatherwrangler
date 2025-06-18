@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🌤️  Setting up Wrangler Weather for local development..."
+echo "🌤️  Setting up Weather Wrangler for local development..."
 echo ""
 
 # Check if Node.js is installed
