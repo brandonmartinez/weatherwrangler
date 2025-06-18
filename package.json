@@ -1,5 +1,5 @@
 {
-  "name": "wrangler-weather",
+  "name": "weatherwrangler",
   "version": "1.0.0",
   "description": "A simple web app to tell you how to drive your Jeep Wrangler based on today's weather conditions",
   "main": "server.js",
