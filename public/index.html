@@ -20,9 +20,9 @@
     <link href="/index.css" rel="stylesheet" />
     <script>
       // Weather API configuration - using OpenWeatherMap API
-      const WEATHER_API_KEY = "WEATHER_API_KEY_PLACEHOLDER"; // This will be replaced during build
+      window.WEATHER_API_KEY = "WEATHER_API_KEY_PLACEHOLDER"; // This will be replaced during build
     </script>
-    <script src="/index.js"></script>
+    <script type="module" src="/index.js"></script>
   </head>
   <body class="bg-gray-800 p-4 font-sans text-gray-900">
     <!-- Background images with blur fringe fix -->
@@ -87,31 +87,51 @@
 
           <!-- Location form state -->
           <div id="locationPrompt" class="hidden">
-            <h1 class="mb-4 font-bold text-2xl text-center">Weather Wrangler</h1>
-            <p class="mb-4 text-center text-gray-600">Please enter your location to get weather recommendations</p>
+            <h1 class="mb-4 font-bold text-2xl text-center">
+              Weather Wrangler
+            </h1>
+            <p class="mb-4 text-center text-gray-600">
+              Please enter your location to get weather recommendations
+            </p>
           </div>
 
           <!-- Weather results -->
           <div id="weatherResults" class="hidden">
-            <h1 id="weatherTitle" class="mb-4 font-bold text-2xl text-center"></h1>
+            <h1
+              id="weatherTitle"
+              class="mb-4 font-bold text-2xl text-center"
+            ></h1>
 
             <div class="mt-6 text-center">
-              <img id="jeepImage"
-                   src=""
-                   alt=""
-                   class="hidden shadow-md mx-auto rounded-lg max-w-full h-auto"
-                   style="max-height: 300px;">
+              <img
+                id="jeepImage"
+                src=""
+                alt=""
+                class="hidden shadow-md mx-auto rounded-lg max-w-full h-auto"
+                style="max-height: 300px"
+              />
             </div>
 
             <div class="mt-4">
-              <p><strong>Max Temperature:</strong> <span id="maxTemp"></span>°F</p>
-              <p><strong>Rain Chance:</strong> <span id="rainChance"></span>%</p>
-              <p><strong>Max Wind Speed:</strong> <span id="windSpeed"></span> MPH</p>
+              <p>
+                <strong>Max Temperature:</strong> <span id="maxTemp"></span>°F
+              </p>
+              <p>
+                <strong>Rain Chance:</strong> <span id="rainChance"></span>%
+              </p>
+              <p>
+                <strong>Max Wind Speed:</strong>
+                <span id="windSpeed"></span> MPH
+              </p>
             </div>
 
             <div class="mt-6">
-              <p class="font-bold text-green-600">Top: <span id="topStatus"></span></p>
-              <p class="font-bold text-green-600">Doors: <span id="doorsStatus"></span></p>
+              <p class="font-bold text-green-600">
+                Top: <span id="topStatus"></span>
+              </p>
+              <p class="font-bold text-green-600">
+                Doors: <span id="doorsStatus"></span>
+              </p>
             </div>
           </div>
         </div>
@@ -131,6 +151,8 @@
               name="zipcode"
               class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
               placeholder="Enter Zip Code"
+              autocomplete="off"
+              data-1p-ignore
             />
           </div>
           <input
