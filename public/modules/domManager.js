@@ -134,7 +134,7 @@ export class DOMManager {
 
     const topStatus = topOff ? "off" : "on";
     const doorsStatus = doorsOff ? "off" : "on";
-    const imageName = `top${topStatus}-doors${doorsStatus}.png`;
+    const imageName = `top${topStatus}-doors${doorsStatus}.jpg`;
     const imagePath = `/images/${imageName}`;
 
     jeepImage.src = imagePath;

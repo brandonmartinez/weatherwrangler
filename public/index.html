@@ -62,249 +62,256 @@
       ></div>
     </div>
 
-    <!-- Weather Wrangler Logos -->
-    <div class="mx-auto max-w-md container">
-      <img
-        src="/images/weatherwrangler-logo-light.svg"
-        alt="Weather Wrangler Logo"
-        class="dark:hidden mx-auto mb-4 w-100"
-      />
-      <img
-        src="/images/weatherwrangler-logo-dark.svg"
-        alt="Weather Wrangler Logo"
-        class="dark:block hidden mx-auto mb-4 w-100"
-      />
-    </div>
+    <!-- Main Container -->
+    <div class="mx-auto mb-4 max-w-md container">
+      <!-- Weather Wrangler Logos -->
+      <div class="mx-auto max-w-full">
+        <img
+          src="/images/weatherwrangler-logo-light.svg"
+          alt="Weather Wrangler Logo"
+          class="dark:hidden max-w-full"
+        />
+        <img
+          src="/images/weatherwrangler-logo-dark.svg"
+          alt="Weather Wrangler Logo"
+          class="dark:block hidden max-w-full"
+        />
+      </div>
 
-    <!-- Loading state -->
-    <div
-      id="loading"
-      class="bg-white shadow-md mx-auto mt-10 p-6 rounded-xl max-w-md overflow-hidden container"
-    >
-      <div class="text-gray-600">Loading...</div>
-    </div>
+      <!-- Loading state -->
+      <div
+        id="loading"
+        class="bg-white shadow-md mt-10 p-6 rounded-xl max-w-full overflow-hidden"
+      >
+        <div class="text-gray-600">Loading...</div>
+      </div>
 
-    <!-- Error state -->
-    <div
-      id="error"
-      class="hidden bg-white shadow-md mx-auto mt-10 p-6 rounded-xl max-w-md text-red-600 overflow-hidden container"
-    ></div>
+      <!-- Error state -->
+      <div
+        id="error"
+        class="hidden bg-white shadow-md mt-10 p-6 rounded-xl max-w-full text-red-600 overflow-hidden"
+      ></div>
 
-    <!-- Location form state -->
-    <div
-      id="locationPrompt"
-      class="hidden bg-white shadow-md mx-auto mt-10 p-6 rounded-xl max-w-md overflow-hidden container"
-    >
-      <h1 class="mb-4 font-bold text-2xl text-center">Weather Wrangler</h1>
-      <p class="mb-4 text-center text-gray-600">
-        Please enter your location to get weather recommendations
-      </p>
-    </div>
+      <!-- Location form state -->
+      <div
+        id="locationPrompt"
+        class="hidden bg-white shadow-md mt-10 p-6 rounded-xl max-w-full overflow-hidden"
+      >
+        <h1 class="mb-4 font-bold text-2xl text-center">Weather Wrangler</h1>
+        <p class="mb-4 text-center text-gray-600">
+          Please enter your location to get weather recommendations
+        </p>
+      </div>
 
-    <!-- Weather results -->
-    <div
-      id="weatherResults"
-      class="hidden bg-white shadow-md mx-auto mt-10 p-6 rounded-xl max-w-md overflow-hidden container"
-    >
-      <div class="mt-6 text-center">
+      <!-- Weather results -->
+      <div
+        id="weatherResults"
+        class="hidden bg-white shadow-md mt-10 rounded-xl max-w-full overflow-hidden"
+      >
         <img
           id="jeepImage"
           src=""
           alt=""
-          class="hidden shadow-md mx-auto rounded-lg max-w-full h-auto"
-          style="max-height: 300px"
+          class="hidden mx-auto rounded-t-xl max-w-full h-auto"
         />
-      </div>
-      <h1 id="weatherTitle" class="mb-4 font-bold text-2xl text-center"></h1>
-
-      <div class="mt-4">
-        <p><strong>Max Temperature:</strong> <span id="maxTemp"></span>°F</p>
-        <p><strong>Rain Chance:</strong> <span id="rainChance"></span>%</p>
-        <p>
-          <strong>Max Wind Speed:</strong>
-          <span id="windSpeed"></span> MPH
-        </p>
-      </div>
-
-      <div class="mt-6">
-        <p class="font-bold text-green-600">
-          Top: <span id="topStatus"></span>
-        </p>
-        <p class="font-bold text-green-600">
-          Doors: <span id="doorsStatus"></span>
-        </p>
-      </div>
-      <div class="flex justify-between items-center mb-4">
-        <div></div>
-        <button
-          id="settingsToggle"
-          class="bg-gray-500 hover:bg-gray-600 px-3 py-1 rounded text-sm text-white"
-        >
-          ⚙️ Settings
-        </button>
-      </div>
-    </div>
-
-    <!-- Location Selection -->
-    <div
-      id="location"
-      class="bg-white shadow-md mx-auto mt-10 p-6 rounded-xl max-w-md overflow-hidden container"
-    >
-      <form id="locationForm">
-        <label for="zipcode" class="block font-medium text-gray-700 text-sm"
-          >Change Location (Zip Code):</label
-        >
-        <div class="mt-1">
-          <input
-            type="text"
-            id="zipcode"
-            name="zipcode"
-            class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
-            placeholder="Enter Zip Code"
-            autocomplete="off"
-            data-1p-ignore
-          />
-        </div>
-        <input
-          type="button"
-          id="useCurrentLocation"
-          class="bg-gray-400 hover:bg-green-700 shadow-md mt-2 px-4 py-2 rounded-md text-white"
-          value="Use Current Location"
-        />
-
-        <button
-          type="submit"
-          class="bg-indigo-600 mt-2 px-4 py-2 rounded-md text-white"
-        >
-          Submit
-        </button>
-      </form>
-    </div>
-
-    <!-- Settings Modal -->
-    <div
-      id="settingsModal"
-      class="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 p-4"
-      style="display: none"
-    >
-      <div
-        class="bg-white rounded-xl w-full max-w-md max-h-screen overflow-y-auto"
-      >
         <div class="p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="font-bold text-lg">Weather Threshold Settings</h2>
-            <button
-              id="closeModal"
-              class="text-gray-500 text-xl hover:text-gray-700"
-            >
-              ×
-            </button>
+          <h1
+            id="weatherTitle"
+            class="mb-4 font-bold text-2xl text-center"
+          ></h1>
+
+          <div class="mt-4">
+            <p>
+              <strong>Max Temperature:</strong> <span id="maxTemp"></span>°F
+            </p>
+            <p><strong>Rain Chance:</strong> <span id="rainChance"></span>%</p>
+            <p>
+              <strong>Max Wind Speed:</strong>
+              <span id="windSpeed"></span> MPH
+            </p>
           </div>
 
-          <form id="settingsForm">
-            <div class="space-y-4">
-              <div>
-                <label
-                  for="tempTopOff"
-                  class="block font-medium text-gray-700 text-sm"
-                >
-                  Minimum Temperature for Top Off (°F):
-                </label>
-                <input
-                  type="number"
-                  id="tempTopOff"
-                  name="tempTopOff"
-                  min="40"
-                  max="100"
-                  class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
-                  placeholder="60"
-                />
-              </div>
+          <div class="mt-6">
+            <p class="font-bold text-green-600">
+              Top: <span id="topStatus"></span>
+            </p>
+            <p class="font-bold text-green-600">
+              Doors: <span id="doorsStatus"></span>
+            </p>
+          </div>
+        </div>
+        <!-- <div class="flex justify-between items-center mb-4">
+          <div></div>
+          <button
+            id="settingsToggle"
+            class="bg-gray-500 hover:bg-gray-600 px-3 py-1 rounded text-sm text-white"
+          >
+            ⚙️ Settings
+          </button>
+        </div> -->
+      </div>
 
-              <div>
-                <label
-                  for="tempDoorsOff"
-                  class="block font-medium text-gray-700 text-sm"
-                >
-                  Minimum Temperature for Doors Off (°F):
-                </label>
-                <input
-                  type="number"
-                  id="tempDoorsOff"
-                  name="tempDoorsOff"
-                  min="40"
-                  max="100"
-                  class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
-                  placeholder="65"
-                />
-              </div>
+      <!-- Location Selection -->
+      <div
+        id="location"
+        class="bg-white shadow-md mx-auto mt-10 p-6 rounded-xl max-w-md overflow-hidden container"
+      >
+        <form id="locationForm">
+          <label for="zipcode" class="block font-medium text-gray-700 text-sm"
+            >Change Location (Zip Code):</label
+          >
+          <div class="mt-1">
+            <input
+              type="text"
+              id="zipcode"
+              name="zipcode"
+              class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+              placeholder="Enter Zip Code"
+              autocomplete="off"
+              data-1p-ignore
+            />
+          </div>
+          <input
+            type="button"
+            id="useCurrentLocation"
+            class="bg-gray-400 hover:bg-green-700 shadow-md mt-2 px-4 py-2 rounded-md text-white"
+            value="Use Current Location"
+          />
 
-              <div>
-                <label
-                  for="rainThreshold"
-                  class="block font-medium text-gray-700 text-sm"
-                >
-                  Maximum Rain Chance (%):
-                </label>
-                <input
-                  type="number"
-                  id="rainThreshold"
-                  name="rainThreshold"
-                  min="0"
-                  max="50"
-                  class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
-                  placeholder="10"
-                />
-              </div>
+          <button
+            type="submit"
+            class="bg-indigo-600 mt-2 px-4 py-2 rounded-md text-white"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
 
-              <div>
-                <label
-                  for="windThreshold"
-                  class="block font-medium text-gray-700 text-sm"
-                >
-                  Maximum Wind Speed for Doors Off (MPH):
-                </label>
-                <input
-                  type="number"
-                  id="windThreshold"
-                  name="windThreshold"
-                  min="5"
-                  max="40"
-                  class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
-                  placeholder="15"
-                />
-              </div>
-            </div>
-
-            <div class="flex justify-between mt-6">
+      <!-- Settings Modal -->
+      <div
+        id="settingsModal"
+        class="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 p-4"
+        style="display: none"
+      >
+        <div
+          class="bg-white rounded-xl w-full max-w-md max-h-screen overflow-y-auto"
+        >
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="font-bold text-lg">Weather Threshold Settings</h2>
               <button
-                type="button"
-                id="cancelSettings"
-                class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded-md text-white"
+                id="closeModal"
+                class="text-gray-500 text-xl hover:text-gray-700"
               >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md text-white"
-              >
-                Save Settings
+                ×
               </button>
             </div>
-          </form>
+
+            <form id="settingsForm">
+              <div class="space-y-4">
+                <div>
+                  <label
+                    for="tempTopOff"
+                    class="block font-medium text-gray-700 text-sm"
+                  >
+                    Minimum Temperature for Top Off (°F):
+                  </label>
+                  <input
+                    type="number"
+                    id="tempTopOff"
+                    name="tempTopOff"
+                    min="40"
+                    max="100"
+                    class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                    placeholder="60"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="tempDoorsOff"
+                    class="block font-medium text-gray-700 text-sm"
+                  >
+                    Minimum Temperature for Doors Off (°F):
+                  </label>
+                  <input
+                    type="number"
+                    id="tempDoorsOff"
+                    name="tempDoorsOff"
+                    min="40"
+                    max="100"
+                    class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                    placeholder="65"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="rainThreshold"
+                    class="block font-medium text-gray-700 text-sm"
+                  >
+                    Maximum Rain Chance (%):
+                  </label>
+                  <input
+                    type="number"
+                    id="rainThreshold"
+                    name="rainThreshold"
+                    min="0"
+                    max="50"
+                    class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                    placeholder="10"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="windThreshold"
+                    class="block font-medium text-gray-700 text-sm"
+                  >
+                    Maximum Wind Speed for Doors Off (MPH):
+                  </label>
+                  <input
+                    type="number"
+                    id="windThreshold"
+                    name="windThreshold"
+                    min="5"
+                    max="40"
+                    class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                    placeholder="15"
+                  />
+                </div>
+              </div>
+
+              <div class="flex justify-between mt-6">
+                <button
+                  type="button"
+                  id="cancelSettings"
+                  class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded-md text-white"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md text-white"
+                >
+                  Save Settings
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Disclaimer -->
-    <div class="mx-auto mt-5 mb-2 container">
-      <footer
-        class="mx-auto p-4 rounded-xl max-w-md text-center text-gray-400 text-xs"
-      >
-        Jeep® and Wrangler® are registered trademarks of Stellantis. This site
-        is not affiliated with or endorsed by Stellantis. All trademarks are
-        property of their respective owners.
-      </footer>
+      <!-- Disclaimer -->
+      <div class="mx-auto mt-5 mb-2 container">
+        <footer
+          class="mx-auto p-4 rounded-xl max-w-md text-center text-gray-400 text-xs"
+        >
+          Jeep® and Wrangler® are registered trademarks of Stellantis. This site
+          is not affiliated with or endorsed by Stellantis. All trademarks are
+          property of their respective owners.
+        </footer>
+      </div>
     </div>
   </body>
 </html>
