@@ -168,70 +168,74 @@ function renderResult({
   maxWind,
   cityName,
 }) {
-  // Generate image filename based on top and doors status
+  // Hide loading and error states
+  hideAllStates();
+
+  // Show weather results
+  document.getElementById("weatherResults").classList.remove("hidden");
+
+  // Update title
+  document.getElementById("weatherTitle").textContent = `Today's Weather Wrangler for ${cityName}`;
+
+  // Update image
   const topStatus = topOff ? "off" : "on";
   const doorsStatus = doorsOff ? "off" : "on";
   const imageName = `top${topStatus}-doors${doorsStatus}.png`;
   const imagePath = `/images/${imageName}`;
 
-  const headerHTML = `
-  <h1 class="mb-4 font-bold text-2xl text-center">Today's Weather Wrangler for ${cityName}</h1>
-  `;
+  const jeepImage = document.getElementById("jeepImage");
+  jeepImage.src = imagePath;
+  jeepImage.alt = `Jeep with top ${topStatus} and doors ${doorsStatus}`;
+  jeepImage.classList.remove("hidden");
 
-  const imageHTML = `
-  <div class="mt-6 text-center">
-    <img src="${imagePath}" alt="Jeep with top ${topStatus} and doors ${doorsStatus}"
-         class="shadow-md mx-auto rounded-lg max-w-full h-auto"
-         style="max-height: 300px;"
-         onerror="this.style.display='none'">
-  </div>
-  `;
+  // Update weather details
+  document.getElementById("maxTemp").textContent = maxTemp;
+  document.getElementById("rainChance").textContent = minRain;
+  document.getElementById("windSpeed").textContent = maxWind;
 
-  const detailsHTML = `
-  <div class="mt-4">
-    <p><strong>Max Temperature:</strong> ${maxTemp}°F</p>
-    <p><strong>Rain Chance:</strong> ${minRain}%</p>
-    <p><strong>Max Wind Speed:</strong> ${maxWind} MPH</p>
-  </div>
-  `;
+  // Update status
+  document.getElementById("topStatus").textContent = topOff ? "Off" : "On";
+  document.getElementById("doorsStatus").textContent = doorsOff ? "Off" : "On";
 
-  const statusHTML = `
-  <div class="mt-6">
-    <p class="font-bold text-green-600">Top: ${topOff ? "Off" : "On"}</p>
-    <p class="font-bold text-green-600">Doors: ${
-      doorsOff ? "Off" : "On"
-    }</p>
-  </div>
-  `;
+  // Re-add event listener for current location button (if it exists)
+  const useCurrentLocationBtn = document.getElementById("useCurrentLocation");
+  if (useCurrentLocationBtn) {
+    useCurrentLocationBtn.removeEventListener("click", handleUseCurrentLocation);
+    useCurrentLocationBtn.addEventListener("click", handleUseCurrentLocation);
+  }
+}
 
-  const resultHTML = headerHTML + imageHTML + detailsHTML + statusHTML;
+function hideAllStates() {
+  document.getElementById("loading").classList.add("hidden");
+  document.getElementById("error").classList.add("hidden");
+  document.getElementById("locationPrompt").classList.add("hidden");
+  document.getElementById("weatherResults").classList.add("hidden");
+}
 
-  document.getElementById("result").innerHTML = resultHTML;
-
-  document
-    .getElementById("useCurrentLocation")
-    .addEventListener("click", () => {
-      // Clear stored location to force fresh location request
-      document.getElementById("zipcode").value = "";
-      localStorage.removeItem("weatherLocation");
-      getLocationAndFetchWeather();
-    });
+function handleUseCurrentLocation() {
+  // Clear stored location to force fresh location request
+  document.getElementById("zipcode").value = "";
+  localStorage.removeItem("weatherLocation");
+  getLocationAndFetchWeather();
 }
 
 function showLocationForm() {
-  document.getElementById("result").innerHTML = `
-    <h1 class="mb-4 font-bold text-2xl text-center">Weather Wrangler</h1>
-    <p class="mb-4 text-center text-gray-600">Please enter your location to get weather recommendations</p>
-  `;
+  hideAllStates();
+  document.getElementById("locationPrompt").classList.remove("hidden");
 }
 
 function showError(error) {
-  document.getElementById(
-    "result"
-  ).textContent = `Error: ${error.message}`;
+  hideAllStates();
+  const errorDiv = document.getElementById("error");
+  errorDiv.textContent = `Error: ${error.message}`;
+  errorDiv.classList.remove("hidden");
 }
 
 function getLocationAndFetchWeather() {
+  // Show loading state
+  hideAllStates();
+  document.getElementById("loading").classList.remove("hidden");
+
   // Check if location is stored in localStorage
   const storedLocation = localStorage.getItem("weatherLocation");
   if (storedLocation) {
@@ -294,6 +298,11 @@ function initializeApp() {
         alert("Please enter a valid zip code.");
         return;
       }
+
+      // Show loading state
+      hideAllStates();
+      document.getElementById("loading").classList.remove("hidden");
+
       try {
         const weather = await fetchWeatherByZip(zipCode);
         const conditions = evaluateConditions(weather);
@@ -347,6 +356,10 @@ function initializeApp() {
       // Refresh the weather evaluation with new settings
       const storedLocation = localStorage.getItem("weatherLocation");
       if (storedLocation) {
+        // Show loading state
+        hideAllStates();
+        document.getElementById("loading").classList.remove("hidden");
+
         const { latitude, longitude, zipCode } = JSON.parse(storedLocation);
         if (zipCode) {
           fetchWeatherByZip(zipCode)
