@@ -7,7 +7,8 @@ export const DEFAULT_SETTINGS = {
 };
 
 export const WEATHER_CONFIG = {
-  CACHE_DURATION: 10 * 60 * 1000, // 10 minutes in milliseconds
+  // CACHE_DURATION: 10 * 60 * 1000, // 10 minutes in milliseconds
+  CACHE_DURATION: 1000, // 10 minutes in milliseconds
   API_TIMEOUT: 10000, // 10 seconds
   RAIN_WEATHER_IDS: {
     THUNDERSTORM_MIN: 200,

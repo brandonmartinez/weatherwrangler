@@ -112,7 +112,7 @@ export class DOMManager {
     // Update title
     const weatherTitle = this.getElement(DOM_ELEMENTS.weatherTitle);
     if (weatherTitle) {
-      weatherTitle.textContent = `Today's Weather Wrangler for ${result.cityName}`;
+      weatherTitle.textContent = `Weather wrangled for today in ${result.cityName}`;
     }
 
     // Update Jeep image
