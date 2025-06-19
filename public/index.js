@@ -116,6 +116,12 @@ class WeatherWranglerApp {
     if (useCurrentLocationBtn) {
       useCurrentLocationBtn.addEventListener('click', this.handleUseCurrentLocation.bind(this));
     }
+
+    // Refresh weather button
+    const refreshWeatherBtn = this.domManager.getElement(DOM_ELEMENTS.refreshWeather);
+    if (refreshWeatherBtn) {
+      refreshWeatherBtn.addEventListener('click', this.handleRefreshWeather.bind(this));
+    }
   }
 
   /**
@@ -273,6 +279,21 @@ class WeatherWranglerApp {
       this.weatherService.clearCache();
       await this.fetchWeatherForLocation(location);
     } else {
+      await this.requestLocationAndFetchWeather();
+    }
+  }
+
+  /**
+   * Handle refresh weather button click
+   */
+  async handleRefreshWeather() {
+    const location = this.locationManager.getStoredLocation();
+    if (location) {
+      // Clear cache and fetch fresh data
+      this.weatherService.clearCache();
+      await this.fetchWeatherForLocation(location);
+    } else {
+      // If no stored location, try to get current location
       await this.requestLocationAndFetchWeather();
     }
   }

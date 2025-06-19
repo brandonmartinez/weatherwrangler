@@ -51,7 +51,8 @@ export const DOM_ELEMENTS = {
   windSpeed: 'windSpeed',
   topStatus: 'topStatus',
   doorsStatus: 'doorsStatus',
-  useCurrentLocation: 'useCurrentLocation'
+  useCurrentLocation: 'useCurrentLocation',
+  refreshWeather: 'refreshWeather'
 };
 
 export const STORAGE_KEYS = {
