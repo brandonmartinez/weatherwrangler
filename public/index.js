@@ -24,22 +24,33 @@ function saveSettings(settings) {
   localStorage.setItem("settings", JSON.stringify(settings));
 }
 
-// Show/hide settings panel
+// Show/hide settings modal
 function toggleSettings() {
-  const settingsPanel = document.getElementById("settings");
-  const isHidden = settingsPanel.style.display === "none" || !settingsPanel.style.display;
+  const settingsModal = document.getElementById("settingsModal");
+  const isHidden = settingsModal.style.display === "none" || !settingsModal.style.display;
 
   if (isHidden) {
-    // Show settings panel and populate with current values
+    // Show settings modal and populate with current values
     const settings = getSettings();
     document.getElementById("tempTopOff").value = settings.tempThresholdTopOff;
     document.getElementById("tempDoorsOff").value = settings.tempThresholdDoorsOff;
     document.getElementById("rainThreshold").value = settings.rainChanceThreshold;
     document.getElementById("windThreshold").value = settings.windSpeedThreshold;
-    settingsPanel.style.display = "block";
+    settingsModal.style.display = "flex";
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = "hidden";
   } else {
-    settingsPanel.style.display = "none";
+    settingsModal.style.display = "none";
+    // Restore body scroll
+    document.body.style.overflow = "auto";
   }
+}
+
+// Close modal function
+function closeModal() {
+  const settingsModal = document.getElementById("settingsModal");
+  settingsModal.style.display = "none";
+  document.body.style.overflow = "auto";
 }
 
 async function fetchWeather(lat, lon) {
@@ -296,6 +307,25 @@ function initializeApp() {
     .getElementById("settingsToggle")
     .addEventListener("click", toggleSettings);
 
+  // Add event handler for close modal button
+  document
+    .getElementById("closeModal")
+    .addEventListener("click", closeModal);
+
+  // Add event handler for cancel settings button
+  document
+    .getElementById("cancelSettings")
+    .addEventListener("click", closeModal);
+
+  // Add event handler to close modal when clicking outside
+  document
+    .getElementById("settingsModal")
+    .addEventListener("click", (event) => {
+      if (event.target.id === "settingsModal") {
+        closeModal();
+      }
+    });
+
   // Add event handler for settings form submission
   document
     .getElementById("settingsForm")
@@ -310,7 +340,7 @@ function initializeApp() {
       };
 
       saveSettings(settings);
-      toggleSettings(); // Hide settings panel
+      closeModal(); // Hide settings modal
 
       // Refresh the weather evaluation with new settings
       const storedLocation = localStorage.getItem("weatherLocation");

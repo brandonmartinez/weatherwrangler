@@ -11,12 +11,54 @@
     </script>
     <script src="/index.js"></script>
   </head>
-  <body class="bg-gray-100 p-4 font-sans text-gray-900">
+  <body class="bg-gray-800 p-4 font-sans text-gray-900">
+    <!-- Background images with blur fringe fix -->
+    <!-- Light mode portrait (mobile) -->
+    <div class="-z-10 fixed inset-0 md:hidden dark:hidden overflow-hidden">
+      <div
+        class="absolute inset-0 bg-cover bg-center opacity-80 blur-sm scale-110"
+        style="background-image: url('/images/background-light-portrait.jpg')"
+      ></div>
+    </div>
+
+    <!-- Light mode landscape (desktop) -->
+    <div
+      class="md:block -z-10 fixed inset-0 hidden dark:hidden overflow-hidden"
+    >
+      <div
+        class="absolute inset-0 bg-cover bg-center opacity-80 blur-sm scale-110"
+        style="background-image: url('/images/background-light-landscape.jpg')"
+      ></div>
+    </div>
+
+    <!-- Dark mode portrait (mobile) -->
+    <div
+      class="dark:block -z-10 fixed inset-0 hidden md:hidden dark:md:hidden overflow-hidden"
+    >
+      <div
+        class="absolute inset-0 bg-cover bg-center opacity-80 blur-sm scale-110"
+        style="background-image: url('/images/background-dark-portrait.jpg')"
+      ></div>
+    </div>
+
+    <!-- Dark mode landscape (desktop) -->
+    <div class="dark:md:block -z-10 fixed inset-0 hidden overflow-hidden">
+      <div
+        class="absolute inset-0 bg-cover bg-center opacity-80 blur-sm scale-110"
+        style="background-image: url('/images/background-dark-landscape.jpg')"
+      ></div>
+    </div>
+
     <div class="mx-auto max-w-md container">
       <img
-        src="/images/weatherwrangler-logo.svg"
+        src="/images/weatherwrangler-logo-light.svg"
         alt="Weather Wrangler Logo"
-        class="mx-auto mb-4 w-100"
+        class="dark:hidden mx-auto mb-4 w-100"
+      />
+      <img
+        src="/images/weatherwrangler-logo-dark.svg"
+        alt="Weather Wrangler Logo"
+        class="dark:block hidden mx-auto mb-4 w-100"
       />
     </div>
     <div class="mx-auto container">
@@ -66,110 +108,123 @@
           ⚙️ Settings
         </button>
       </div>
+    </div>
 
-      <!-- Settings Panel -->
+    <!-- Settings Modal -->
+    <div
+      id="settingsModal"
+      class="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 p-4"
+      style="display: none"
+    >
       <div
-        id="settings"
-        class="bg-white shadow-md mx-auto mt-10 p-6 rounded-xl max-w-md overflow-hidden"
-        style="display: none"
+        class="bg-white rounded-xl w-full max-w-md max-h-screen overflow-y-auto"
       >
-        <h2 class="mb-4 font-bold text-center text-lg">
-          Weather Threshold Settings
-        </h2>
-        <form id="settingsForm">
-          <div class="space-y-4">
-            <div>
-              <label
-                for="tempTopOff"
-                class="block font-medium text-gray-700 text-sm"
-              >
-                Minimum Temperature for Top Off (°F):
-              </label>
-              <input
-                type="number"
-                id="tempTopOff"
-                name="tempTopOff"
-                min="40"
-                max="100"
-                class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
-                placeholder="60"
-              />
-            </div>
-
-            <div>
-              <label
-                for="tempDoorsOff"
-                class="block font-medium text-gray-700 text-sm"
-              >
-                Minimum Temperature for Doors Off (°F):
-              </label>
-              <input
-                type="number"
-                id="tempDoorsOff"
-                name="tempDoorsOff"
-                min="40"
-                max="100"
-                class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
-                placeholder="65"
-              />
-            </div>
-
-            <div>
-              <label
-                for="rainThreshold"
-                class="block font-medium text-gray-700 text-sm"
-              >
-                Maximum Rain Chance (%):
-              </label>
-              <input
-                type="number"
-                id="rainThreshold"
-                name="rainThreshold"
-                min="0"
-                max="50"
-                class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
-                placeholder="10"
-              />
-            </div>
-
-            <div>
-              <label
-                for="windThreshold"
-                class="block font-medium text-gray-700 text-sm"
-              >
-                Maximum Wind Speed for Doors Off (MPH):
-              </label>
-              <input
-                type="number"
-                id="windThreshold"
-                name="windThreshold"
-                min="5"
-                max="40"
-                class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
-                placeholder="15"
-              />
-            </div>
-          </div>
-
-          <div class="flex justify-between mt-6">
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="font-bold text-lg">Weather Threshold Settings</h2>
             <button
-              type="button"
-              id="cancelSettings"
-              class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded-md text-white"
-              onclick="toggleSettings()"
+              id="closeModal"
+              class="text-gray-500 text-xl hover:text-gray-700"
             >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md text-white"
-            >
-              Save Settings
+              ×
             </button>
           </div>
-        </form>
+
+          <form id="settingsForm">
+            <div class="space-y-4">
+              <div>
+                <label
+                  for="tempTopOff"
+                  class="block font-medium text-gray-700 text-sm"
+                >
+                  Minimum Temperature for Top Off (°F):
+                </label>
+                <input
+                  type="number"
+                  id="tempTopOff"
+                  name="tempTopOff"
+                  min="40"
+                  max="100"
+                  class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                  placeholder="60"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="tempDoorsOff"
+                  class="block font-medium text-gray-700 text-sm"
+                >
+                  Minimum Temperature for Doors Off (°F):
+                </label>
+                <input
+                  type="number"
+                  id="tempDoorsOff"
+                  name="tempDoorsOff"
+                  min="40"
+                  max="100"
+                  class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                  placeholder="65"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="rainThreshold"
+                  class="block font-medium text-gray-700 text-sm"
+                >
+                  Maximum Rain Chance (%):
+                </label>
+                <input
+                  type="number"
+                  id="rainThreshold"
+                  name="rainThreshold"
+                  min="0"
+                  max="50"
+                  class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                  placeholder="10"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="windThreshold"
+                  class="block font-medium text-gray-700 text-sm"
+                >
+                  Maximum Wind Speed for Doors Off (MPH):
+                </label>
+                <input
+                  type="number"
+                  id="windThreshold"
+                  name="windThreshold"
+                  min="5"
+                  max="40"
+                  class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                  placeholder="15"
+                />
+              </div>
+            </div>
+
+            <div class="flex justify-between mt-6">
+              <button
+                type="button"
+                id="cancelSettings"
+                class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded-md text-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md text-white"
+              >
+                Save Settings
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
+
     <div class="mx-auto mt-5 mb-2 container">
       <footer
         class="mx-auto p-4 rounded-xl max-w-md text-center text-gray-400 text-xs"
