@@ -208,10 +208,22 @@
         <div class="p-6">
           <h1
             id="weatherTitle"
-            class="mb-4 font-bold text-2xl text-center"
+            class="mb-6 font-bold text-2xl text-center"
           ></h1>
 
-          <div class="mt-4">
+          <div class="flex justify-center gap-6 mb-6">
+            <p class="font-bold text-green-600 text-xl">
+              Top: <span id="topStatus"></span>
+            </p>
+            <p class="font-bold text-green-600 text-xl">
+              Doors: <span id="doorsStatus"></span>
+            </p>
+          </div>
+
+          <div class="">
+            <p class="">
+              <strong>Date:</strong> <span id="weatherDate"></span>
+            </p>
             <p>
               <strong>Max Temperature:</strong> <span id="maxTemp"></span>°F
             </p>
@@ -220,14 +232,8 @@
               <strong>Max Wind Speed:</strong>
               <span id="windSpeed"></span> MPH
             </p>
-          </div>
-
-          <div class="mt-6">
-            <p class="font-bold text-green-600">
-              Top: <span id="topStatus"></span>
-            </p>
-            <p class="font-bold text-green-600">
-              Doors: <span id="doorsStatus"></span>
+            <p class="mt-4 text-gray-600 text-xs">
+              <strong>Last Updated:</strong> <span id="lastUpdated"></span>
             </p>
           </div>
         </div>

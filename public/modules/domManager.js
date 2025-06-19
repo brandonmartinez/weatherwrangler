@@ -146,7 +146,29 @@ export class DOMManager {
    * Update weather details display
    */
   updateWeatherDetails(result) {
+    // Format current date
+    const today = new Date();
+    const dateString = today.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    // Format last updated time
+    const lastUpdatedString = result.lastUpdated
+      ? new Date(result.lastUpdated).toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        })
+      : 'Just now';
+
     const elements = {
+      [DOM_ELEMENTS.weatherDate]: dateString,
+      [DOM_ELEMENTS.lastUpdated]: lastUpdatedString,
       [DOM_ELEMENTS.maxTemp]: result.maxTemp,
       [DOM_ELEMENTS.rainChance]: result.minRain,
       [DOM_ELEMENTS.windSpeed]: result.maxWind

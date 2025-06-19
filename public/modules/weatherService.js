@@ -28,7 +28,12 @@ export class WeatherService {
     const data = await this.makeApiRequest(url);
 
     this.cacheWeather(cacheKey, data);
-    return data;
+
+    // Add current timestamp for fresh data
+    return {
+      ...data,
+      cacheTimestamp: Date.now()
+    };
   }
 
   /**
@@ -52,7 +57,12 @@ export class WeatherService {
     // Store location for future use
     localStorage.setItem(STORAGE_KEYS.WEATHER_LOCATION, JSON.stringify({ zipCode }));
     this.cacheWeather(cacheKey, data);
-    return data;
+
+    // Add current timestamp for fresh data
+    return {
+      ...data,
+      cacheTimestamp: Date.now()
+    };
   }
 
   /**
@@ -104,7 +114,11 @@ export class WeatherService {
 
         if (!isExpired) {
           console.log('Using cached weather data');
-          return data;
+          // Add the cache timestamp to the data
+          return {
+            ...data,
+            cacheTimestamp: timestamp
+          };
         } else {
           // Clean up expired cache
           localStorage.removeItem(`${STORAGE_KEYS.WEATHER_CACHE}_${key}`);

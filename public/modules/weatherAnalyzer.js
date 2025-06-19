@@ -9,6 +9,7 @@ export class WeatherAnalyzer {
    */
   static evaluateConditions(weatherData, settings) {
     const cityName = weatherData.city ? weatherData.city.name : "Unknown Location";
+    const lastUpdated = weatherData.cacheTimestamp || Date.now();
     const todayForecasts = this.getTodayForecasts(weatherData);
 
     if (todayForecasts.length === 0) {
@@ -21,7 +22,8 @@ export class WeatherAnalyzer {
     return {
       ...recommendations,
       ...conditions,
-      cityName
+      cityName,
+      lastUpdated
     };
   }
 
