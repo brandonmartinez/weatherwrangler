@@ -208,51 +208,82 @@
             </p>
           </div>
         </div>
-        <!-- <div class="flex justify-between items-center mb-4">
-          <div></div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="mx-auto mt-4 text-center container">
+        <div class="inline-flex shadow-xs rounded-md">
+          <button
+            id="useCurrentLocation"
+            class="focus:z-10 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-s-lg font-medium text-blue-700 text-sm focus:text-blue-700 dark:hover:text-white dark:focus:text-white dark:text-white cursor-pointer focus:ring-2 focus:ring-blue-700 dark:focus:ring-blue-500"
+          >
+            🌍 Use Location
+          </button>
+          <button
+            id="locationToggle"
+            class="focus:z-10 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 border border-gray-200 dark:border-gray-700 border-t border-b font-medium text-blue-700 text-sm focus:text-blue-700 dark:hover:text-white dark:focus:text-white dark:text-white cursor-pointer focus:ring-2 focus:ring-blue-700 dark:focus:ring-blue-500"
+          >
+            🏘️ Change Location
+          </button>
           <button
             id="settingsToggle"
-            class="bg-gray-500 hover:bg-gray-600 px-3 py-1 rounded text-sm text-white"
+            class="focus:z-10 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-e-lg font-medium text-blue-700 text-sm focus:text-blue-700 dark:hover:text-white dark:focus:text-white dark:text-white cursor-pointer focus:ring-2 focus:ring-blue-700 dark:focus:ring-blue-500"
           >
             ⚙️ Settings
           </button>
-        </div> -->
+        </div>
       </div>
 
-      <!-- Location Selection -->
+      <!-- Location Modal -->
       <div
-        id="location"
-        class="bg-white shadow-md mx-auto mt-10 p-6 rounded-xl max-w-md overflow-hidden container"
+        id="locationModal"
+        class="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 p-4"
+        style="display: none"
       >
-        <form id="locationForm">
-          <label for="zipcode" class="block font-medium text-gray-700 text-sm"
-            >Change Location (Zip Code):</label
-          >
-          <div class="mt-1">
-            <input
-              type="text"
-              id="zipcode"
-              name="zipcode"
-              class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
-              placeholder="Enter Zip Code"
-              autocomplete="off"
-              data-1p-ignore
-            />
-          </div>
-          <input
-            type="button"
-            id="useCurrentLocation"
-            class="bg-gray-400 hover:bg-green-700 shadow-md mt-2 px-4 py-2 rounded-md text-white"
-            value="Use Current Location"
-          />
+        <div
+          class="bg-white rounded-xl w-full max-w-md max-h-screen overflow-y-auto"
+        >
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="font-bold text-lg">Change Location</h2>
+              <button
+                id="closeLocationModal"
+                class="text-gray-500 text-xl hover:text-gray-700"
+              >
+                ×
+              </button>
+            </div>
 
-          <button
-            type="submit"
-            class="bg-indigo-600 mt-2 px-4 py-2 rounded-md text-white"
-          >
-            Submit
-          </button>
-        </form>
+            <form id="locationForm">
+              <div class="space-y-4">
+                <div>
+                  <label
+                    for="zipcode"
+                    class="block font-medium text-gray-700 text-sm"
+                  >
+                    Change Location (Zip Code):
+                  </label>
+                  <input
+                    type="text"
+                    id="zipcode"
+                    name="zipcode"
+                    class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                    placeholder="Enter Zip Code"
+                    autocomplete="off"
+                    data-1p-ignore
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  class="bg-indigo-600 mt-2 px-4 py-2 rounded-md text-white"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
 
       <!-- Settings Modal -->

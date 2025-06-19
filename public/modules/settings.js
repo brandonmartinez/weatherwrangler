@@ -1,4 +1,5 @@
-import { DEFAULT_SETTINGS, STORAGE_KEYS } from './constants.js';
+import { DEFAULT_SETTINGS, STORAGE_KEYS, DOM_ELEMENTS } from './constants.js';
+import { BaseModal } from './baseModal.js';
 
 /**
  * Settings management utilities
@@ -38,5 +39,53 @@ export class SettingsManager {
   static resetToDefaults() {
     localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
     return DEFAULT_SETTINGS;
+  }
+}
+
+/**
+ * Settings modal management
+ */
+export class SettingsModal extends BaseModal {
+  constructor(domManager, settingsManager, onSettingsChange) {
+    super(domManager, DOM_ELEMENTS.settingsModal);
+    this.settingsManager = settingsManager;
+    this.onSettingsChange = onSettingsChange;
+  }
+
+  /**
+   * Hook called when modal is opened
+   */
+  onOpen() {
+    // Populate with current values
+    const settings = this.settingsManager.getSettings();
+    this.domManager.populateSettingsForm(settings);
+
+    // Focus on first input for accessibility
+    const firstInput = this.domManager.getElement(DOM_ELEMENTS.tempTopOff);
+    if (firstInput) {
+      setTimeout(() => firstInput.focus(), 100);
+    }
+  }
+
+  /**
+   * Handle settings form submission
+   */
+  handleSubmit(event) {
+    event.preventDefault();
+
+    try {
+      const newSettings = this.domManager.getSettingsFromForm();
+      const validatedSettings = this.settingsManager.saveSettings(newSettings);
+
+      this.close();
+
+      // Notify about settings change
+      if (this.onSettingsChange) {
+        this.onSettingsChange(validatedSettings);
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      // Could show an error message to user here
+    }
   }
 }

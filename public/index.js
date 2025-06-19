@@ -1,9 +1,8 @@
 import { WeatherService } from './modules/weatherService.js';
 import { WeatherAnalyzer } from './modules/weatherAnalyzer.js';
-import { SettingsManager } from './modules/settings.js';
 import { DOMManager } from './modules/domManager.js';
-import { SettingsModal } from './modules/settingsModal.js';
-import { LocationManager } from './modules/locationManager.js';
+import { SettingsManager, SettingsModal } from './modules/settings.js';
+import { LocationManager, LocationModal } from './modules/location.js';
 import { DOM_ELEMENTS } from './modules/constants.js';
 
 /**
@@ -19,6 +18,7 @@ class WeatherWranglerApp {
       SettingsManager,
       this.handleSettingsChange.bind(this)
     );
+    this.locationModal = new LocationModal(this.domManager, this.locationManager);
 
     this.isInitialized = false;
     this.currentWeatherData = null;
@@ -44,10 +44,29 @@ class WeatherWranglerApp {
    * Set up all event listeners
    */
   setupEventListeners() {
+
+    // Location toggle
+    const locationToggle = this.domManager.getElement('locationToggle');
+    if (locationToggle) {
+      locationToggle.addEventListener('click', () => this.locationModal.toggle());
+    }
+
     // Location form submission
     const locationForm = this.domManager.getElement(DOM_ELEMENTS.locationForm);
     if (locationForm) {
-      locationForm.addEventListener('submit', this.handleLocationSubmit.bind(this));
+      locationForm.addEventListener('submit', this.locationModal.handleSubmit.bind(this.locationModal));
+    }
+
+    // Location modal close button
+    const closeLocationModal = this.domManager.getElement('closeLocationModal');
+    if (closeLocationModal) {
+      closeLocationModal.addEventListener('click', () => this.locationModal.close());
+    }
+
+    // Location modal backdrop click
+    const locationModal = this.domManager.getElement('locationModal');
+    if (locationModal) {
+      locationModal.addEventListener('click', this.locationModal.handleBackdropClick.bind(this.locationModal));
     }
 
     // Settings toggle
@@ -81,11 +100,14 @@ class WeatherWranglerApp {
     }
 
     // Keyboard shortcuts
-    document.addEventListener('keydown', this.settingsModal.handleKeyDown.bind(this.settingsModal));
+    document.addEventListener('keydown', (event) => {
+      this.settingsModal.handleKeyDown(event);
+      this.locationModal.handleKeyDown(event);
+    });
 
     // Use current location button (added dynamically)
     const useCurrentLocationBtn = this.domManager.getElement(DOM_ELEMENTS.useCurrentLocation);
-    if (useCurrentLocationBtn){
+    if (useCurrentLocationBtn) {
       useCurrentLocationBtn.addEventListener('click', this.handleUseCurrentLocation.bind(this));
     }
   }

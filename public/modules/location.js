@@ -1,4 +1,5 @@
 import { STORAGE_KEYS } from './constants.js';
+import { BaseModal } from './baseModal.js';
 
 /**
  * Location management utilities
@@ -132,5 +133,59 @@ export class LocationManager {
     }
 
     return null;
+  }
+}
+
+/**
+ * Location modal management
+ */
+export class LocationModal extends BaseModal {
+  constructor(domManager, locationManager) {
+    super(domManager, 'locationModal');
+    this.locationManager = locationManager;
+  }
+
+  /**
+   * Hook called when modal is opened
+   */
+  onOpen() {
+    // Focus on zipcode input for accessibility
+    const zipcodeInput = this.domManager.getElement('zipcode');
+    if (zipcodeInput) {
+      setTimeout(() => zipcodeInput.focus(), 100);
+    }
+  }
+
+  /**
+   * Handle location form submission
+   */
+  handleSubmit(event) {
+    event.preventDefault();
+
+    try {
+      const zipCode = this.domManager.getElement('zipcode').value;
+      if (!zipCode) {
+        alert('Please enter a valid ZIP code.');
+        return;
+      }
+
+      if (!LocationManager.validateZipCode(zipCode)) {
+        alert('Please enter a valid 5-digit ZIP code.');
+        return;
+      }
+
+      const location = this.locationManager.storeZipLocation(zipCode);
+      this.close();
+
+      // Trigger weather refresh
+      if (window.weatherApp) {
+        window.weatherApp.fetchWeatherForLocation(location);
+      }
+
+      console.log('Location updated:', location);
+    } catch (error) {
+      console.error('Error updating location:', error);
+      alert('Error updating location: ' + error.message);
+    }
   }
 }
