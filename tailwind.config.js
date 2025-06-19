@@ -5,7 +5,7 @@ module.exports = {
     "./public/index.js",
     "./server.js"
   ],
-  darkMode: 'media', // Uses prefers-color-scheme media query
+  darkMode: 'media',
   theme: {
     extend: {},
   },

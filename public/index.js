@@ -250,7 +250,8 @@ function getLocationAndFetchWeather() {
           renderResult(conditions);
         })
         .catch((e) => showError(e));
-    } // else, proceed (do nothing here)
+    }
+    // else, proceed (do nothing here)
     return;
   }
 
@@ -340,7 +341,8 @@ function initializeApp() {
       };
 
       saveSettings(settings);
-      closeModal(); // Hide settings modal
+      // Hide settings modal
+      closeModal();
 
       // Refresh the weather evaluation with new settings
       const storedLocation = localStorage.getItem("weatherLocation");
