@@ -169,6 +169,29 @@
         <p class="mb-4 text-center text-gray-600">
           Please enter your location to get weather recommendations
         </p>
+
+        <form id="locationPromptForm">
+          <div class="space-y-4">
+            <div>
+              <input
+                type="text"
+                id="zipcodePrompt"
+                name="zipcodePrompt"
+                class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                placeholder="Enter Zip Code"
+                autocomplete="off"
+                data-1p-ignore
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="bg-indigo-600 mt-2 px-4 py-2 rounded-md w-full text-white"
+            >
+              Get Weather
+            </button>
+          </div>
+        </form>
       </div>
 
       <!-- Weather results -->

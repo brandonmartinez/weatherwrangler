@@ -216,10 +216,28 @@ export class DOMManager {
   }
 
   /**
+   * Get ZIP code from location prompt form
+   */
+  getZipCodeFromPrompt() {
+    const zipElement = this.getElement(DOM_ELEMENTS.zipcodePrompt);
+    return zipElement ? zipElement.value.trim() : '';
+  }
+
+  /**
    * Clear ZIP code input
    */
   clearZipCode() {
     const zipElement = this.getElement(DOM_ELEMENTS.zipcode);
+    if (zipElement) {
+      zipElement.value = '';
+    }
+  }
+
+  /**
+   * Clear ZIP code input from prompt
+   */
+  clearZipCodePrompt() {
+    const zipElement = this.getElement(DOM_ELEMENTS.zipcodePrompt);
     if (zipElement) {
       zipElement.value = '';
     }

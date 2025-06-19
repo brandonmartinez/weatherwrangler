@@ -57,6 +57,12 @@ class WeatherWranglerApp {
       locationForm.addEventListener('submit', this.locationModal.handleSubmit.bind(this.locationModal));
     }
 
+    // Location prompt form submission
+    const locationPromptForm = this.domManager.getElement(DOM_ELEMENTS.locationPromptForm);
+    if (locationPromptForm) {
+      locationPromptForm.addEventListener('submit', this.handleLocationPromptSubmit.bind(this));
+    }
+
     // Location modal close button
     const closeLocationModal = this.domManager.getElement('closeLocationModal');
     if (closeLocationModal) {
@@ -191,6 +197,32 @@ class WeatherWranglerApp {
     event.preventDefault();
 
     const zipCode = this.domManager.getZipCode();
+    if (!zipCode) {
+      alert('Please enter a valid ZIP code.');
+      return;
+    }
+
+    if (!LocationManager.validateZipCode(zipCode)) {
+      alert('Please enter a valid 5-digit ZIP code.');
+      return;
+    }
+
+    try {
+      const location = this.locationManager.storeZipLocation(zipCode);
+      await this.fetchWeatherForLocation(location);
+    } catch (error) {
+      console.error('ZIP code error:', error);
+      this.domManager.showError(error);
+    }
+  }
+
+  /**
+   * Handle location prompt form submission
+   */
+  async handleLocationPromptSubmit(event) {
+    event.preventDefault();
+
+    const zipCode = this.domManager.getZipCodeFromPrompt();
     if (!zipCode) {
       alert('Please enter a valid ZIP code.');
       return;

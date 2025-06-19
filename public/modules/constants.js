@@ -35,6 +35,8 @@ export const DOM_ELEMENTS = {
   windThreshold: 'windThreshold',
   zipcode: 'zipcode',
   locationForm: 'locationForm',
+  zipcodePrompt: 'zipcodePrompt',
+  locationPromptForm: 'locationPromptForm',
 
   // Display elements
   loading: 'loading',
