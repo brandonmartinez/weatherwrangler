@@ -1,4 +1,5 @@
 import { DOM_ELEMENTS } from './constants.js';
+import { WeatherAnalyzer } from './weatherAnalyzer.js';
 
 /**
  * DOM utility functions with caching and error handling
@@ -100,7 +101,7 @@ export class DOMManager {
   /**
    * Update weather results display
    */
-  updateWeatherResults(result) {
+  updateWeatherResults(result, settings) {
     this.hideAllStates();
 
     // Show weather results
@@ -120,6 +121,10 @@ export class DOMManager {
 
     // Update weather details
     this.updateWeatherDetails(result);
+
+    // Update rain timing and explanations
+    this.updateRainTiming(result);
+    this.updateWeatherExplanations(result, settings);
 
     // Update status
     this.updateStatus(result.topOff, result.doorsOff);
@@ -262,6 +267,60 @@ export class DOMManager {
     const zipElement = this.getElement(DOM_ELEMENTS.zipcodePrompt);
     if (zipElement) {
       zipElement.value = '';
+    }
+  }
+
+  /**
+   * Update rain timing display
+   */
+  updateRainTiming(result) {
+    const rainTimingContainer = this.getElement(DOM_ELEMENTS.rainTiming);
+    const rainTimingDetails = this.getElement(DOM_ELEMENTS.rainTimingDetails);
+
+    if (!rainTimingContainer || !rainTimingDetails) return;
+
+    if (result.rainTiming && result.rainTiming.hasRain && result.rainTiming.summary) {
+      rainTimingDetails.textContent = result.rainTiming.summary;
+      rainTimingContainer.classList.remove('hidden');
+    } else {
+      rainTimingContainer.classList.add('hidden');
+    }
+  }
+
+  /**
+   * Update weather explanations display
+   */
+  updateWeatherExplanations(result, settings) {
+    const explanationsContainer = this.getElement(DOM_ELEMENTS.weatherExplanations);
+    if (!explanationsContainer) return;
+
+    // Get explanations from the weather analyzer
+    const explanations = WeatherAnalyzer.getRecommendationExplanations(result, settings);
+
+    // Clear existing explanations
+    explanationsContainer.innerHTML = '';
+
+    if (explanations && explanations.length > 0) {
+      explanations.forEach(explanation => {
+        const explanationEl = document.createElement('div');
+        explanationEl.className = 'text-sm p-2 rounded';
+
+        // Style different types of explanations
+        if (explanation.includes('ℹ️')) {
+          explanationEl.className += ' bg-blue-50 text-blue-800 border-l-4 border-blue-400';
+        } else if (explanation.includes('too')) {
+          explanationEl.className += ' bg-yellow-50 text-yellow-800 border-l-4 border-yellow-400';
+        } else {
+          explanationEl.className += ' bg-gray-50 text-gray-800 border-l-4 border-gray-400';
+        }
+
+        explanationEl.textContent = explanation;
+        explanationsContainer.appendChild(explanationEl);
+      });
+
+      explanationsContainer.classList.remove('hidden');
+    } else {
+      explanationsContainer.classList.add('hidden');
     }
   }
 }

@@ -26,6 +26,7 @@ export const DOM_ELEMENTS = {
   settingsForm: 'settingsForm',
   closeModal: 'closeModal',
   cancelSettings: 'cancelSettings',
+  resetSettings: 'resetSettings',
 
   // Form inputs
   tempTopOff: 'tempTopOff',
@@ -51,6 +52,9 @@ export const DOM_ELEMENTS = {
   windSpeed: 'windSpeed',
   topStatus: 'topStatus',
   doorsStatus: 'doorsStatus',
+  rainTiming: 'rainTiming',
+  rainTimingDetails: 'rainTimingDetails',
+  weatherExplanations: 'weatherExplanations',
   useCurrentLocation: 'useCurrentLocation',
   refreshWeather: 'refreshWeather'
 };

@@ -90,6 +90,7 @@ class WeatherWranglerApp {
     // Modal close buttons
     const closeModal = this.domManager.getElement(DOM_ELEMENTS.closeModal);
     const cancelSettings = this.domManager.getElement(DOM_ELEMENTS.cancelSettings);
+    const resetSettings = this.domManager.getElement(DOM_ELEMENTS.resetSettings);
 
     if (closeModal) {
       closeModal.addEventListener('click', () => this.settingsModal.close());
@@ -97,6 +98,10 @@ class WeatherWranglerApp {
 
     if (cancelSettings) {
       cancelSettings.addEventListener('click', () => this.settingsModal.close());
+    }
+
+    if (resetSettings) {
+      resetSettings.addEventListener('click', () => this.settingsModal.handleReset());
     }
 
     // Modal backdrop click
@@ -188,7 +193,7 @@ class WeatherWranglerApp {
       const settings = SettingsManager.getSettings();
       const result = WeatherAnalyzer.evaluateConditions(this.currentWeatherData, settings);
 
-      this.domManager.updateWeatherResults(result);
+      this.domManager.updateWeatherResults(result, settings);
 
     } catch (error) {
       console.error('Weather analysis error:', error);

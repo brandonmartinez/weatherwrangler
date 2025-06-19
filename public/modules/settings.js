@@ -88,4 +88,20 @@ export class SettingsModal extends BaseModal {
       // Could show an error message to user here
     }
   }
+
+  /**
+   * Handle reset to defaults button click
+   */
+  handleReset() {
+    // Reset settings to defaults
+    const defaultSettings = SettingsManager.resetToDefaults();
+
+    // Update the form with default values
+    this.domManager.populateSettingsForm(defaultSettings);
+
+    // Notify about settings change
+    if (this.onSettingsChange) {
+      this.onSettingsChange(defaultSettings);
+    }
+  }
 }

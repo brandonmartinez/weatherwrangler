@@ -232,6 +232,17 @@
               <strong>Max Wind Speed:</strong>
               <span id="windSpeed"></span> MPH
             </p>
+
+            <!-- Rain timing information -->
+            <div id="rainTiming" class="hidden bg-blue-50 mt-3 p-3 border-blue-400 border-l-4 rounded-md">
+              <p class="font-medium text-blue-800 text-sm">☔ Rain Timing</p>
+              <p id="rainTimingDetails" class="mt-1 text-blue-700 text-sm"></p>
+            </div>
+
+            <!-- Additional explanations/tips -->
+            <div id="weatherExplanations" class="space-y-2 hidden mt-3">
+            </div>
+
             <p class="mt-4 text-gray-600 text-xs">
               <strong>Last Updated:</strong> <span id="lastUpdated"></span>
             </p>
@@ -428,12 +439,21 @@
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md text-white"
-                >
-                  Save Settings
-                </button>
+                <div class="flex space-x-2">
+                  <button
+                    type="button"
+                    id="resetSettings"
+                    class="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md text-white"
+                  >
+                    Reset to Defaults
+                  </button>
+                  <button
+                    type="submit"
+                    class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md text-white"
+                  >
+                    Save Settings
+                  </button>
+                </div>
               </div>
             </form>
           </div>
