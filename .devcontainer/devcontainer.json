@@ -10,7 +10,8 @@
             "extensions": [
                 "esbenp.prettier-vscode",
                 "bradlc.vscode-tailwindcss",
-                "dejmedus.tailwind-sorter"
+                "dejmedus.tailwind-sorter",
+                "github.vscode-github-actions"
             ]
         }
     }
