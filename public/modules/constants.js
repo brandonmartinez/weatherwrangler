@@ -56,7 +56,9 @@ export const DOM_ELEMENTS = {
   rainTimingDetails: 'rainTimingDetails',
   weatherExplanations: 'weatherExplanations',
   useCurrentLocation: 'useCurrentLocation',
-  refreshWeather: 'refreshWeather'
+  refreshWeather: 'refreshWeather',
+  cityName: 'cityName',
+  currentYear: 'currentYear',
 };
 
 export const STORAGE_KEYS = {

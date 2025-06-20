@@ -116,6 +116,12 @@ export class DOMManager {
       weatherTitle.textContent = `Weather wrangled for today in ${result.cityName}`;
     }
 
+    // Update city
+    const cityName = this.getElement(DOM_ELEMENTS.cityName);
+    if (cityName) {
+      cityName.textContent = result.cityName;
+    }
+
     // Update Jeep image
     this.updateJeepImage(result.topOff, result.doorsOff);
 
@@ -163,12 +169,12 @@ export class DOMManager {
     // Format last updated time
     const lastUpdatedString = result.lastUpdated
       ? new Date(result.lastUpdated).toLocaleString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        })
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      })
       : 'Just now';
 
     const elements = {
@@ -303,18 +309,54 @@ export class DOMManager {
     if (explanations && explanations.length > 0) {
       explanations.forEach(explanation => {
         const explanationEl = document.createElement('div');
-        explanationEl.className = 'text-sm p-2 rounded';
+        explanationEl.className = 'text-sm p-3 rounded-lg mb-2';
 
         // Style different types of explanations
-        if (explanation.includes('ℹ️')) {
+        if (explanation.includes('🎯')) {
+          // Time-based recommendations - make these prominent
+          explanationEl.className += ' bg-gradient-to-r from-green-50 to-blue-50 text-green-800 border border-green-200 font-medium shadow-sm';
+          const content = explanation.replace('🎯 ', '');
+          explanationEl.innerHTML = `
+            <div class="flex items-start gap-3">
+              <span class="text-xl flex-shrink-0 mt-0.5">🎯</span>
+              <div>
+                <div class="font-semibold text-green-900 mb-1">Smart Recommendation</div>
+                <div class="text-green-800">${content}</div>
+              </div>
+            </div>
+          `;
+        } else if (explanation.includes('💡')) {
+          // Pro tips
+          explanationEl.className += ' bg-amber-50 text-amber-800 border border-amber-200 font-medium';
+          explanationEl.innerHTML = `<div class="flex items-start gap-2"><span class="text-lg">💡</span><span>${explanation.replace('💡 ', '')}</span></div>`;
+        } else if (explanation.includes('ℹ️')) {
+          // Info tips
           explanationEl.className += ' bg-blue-50 text-blue-800 border-l-4 border-blue-400';
+          explanationEl.innerHTML = `<div class="flex items-start gap-2"><span>ℹ️</span><span>${explanation.replace('ℹ️ ', '')}</span></div>`;
+        } else if (explanation.includes('📊')) {
+          // Technical details - make these collapsible/secondary
+          explanationEl.className += ' bg-gray-50 text-gray-700 border border-gray-200 text-xs';
+          const detailsContent = explanation.replace('📊 Technical details: ', '');
+          explanationEl.innerHTML = `
+            <details class="cursor-pointer">
+              <summary class="font-medium text-gray-800 hover:text-gray-900 flex items-center gap-2">
+                <span>📊</span>
+                <span>Technical Details</span>
+                <span class="ml-auto text-gray-500">▼</span>
+              </summary>
+              <div class="mt-2 pl-6 text-gray-600 border-t border-gray-200 pt-2">${detailsContent}</div>
+            </details>
+          `;
         } else if (explanation.includes('too')) {
+          // Warning explanations
           explanationEl.className += ' bg-yellow-50 text-yellow-800 border-l-4 border-yellow-400';
+          explanationEl.textContent = explanation;
         } else {
+          // Default styling
           explanationEl.className += ' bg-gray-50 text-gray-800 border-l-4 border-gray-400';
+          explanationEl.textContent = explanation;
         }
 
-        explanationEl.textContent = explanation;
         explanationsContainer.appendChild(explanationEl);
       });
 

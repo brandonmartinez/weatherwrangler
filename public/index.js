@@ -22,6 +22,7 @@ class WeatherWranglerApp {
 
     this.isInitialized = false;
     this.currentWeatherData = null;
+    this.currentYear = new Date().getFullYear();
   }
 
   /**
@@ -31,6 +32,15 @@ class WeatherWranglerApp {
     if (this.isInitialized) return;
 
     try {
+      const currentYearElem = this.domManager.getElement('currentYear');
+      if (currentYearElem) {
+        if (this.currentYear > 2025) {
+          currentYearElem.textContent = `2025 - ${this.currentYear}`;
+        } else {
+          currentYearElem.textContent = this.currentYear;
+        }
+      }
+
       this.setupEventListeners();
       await this.loadInitialWeather();
       this.isInitialized = true;
