@@ -43,13 +43,32 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Post-process index.html
+      - name: Post-process files for cache busting
         run: |
+          # Generate cache buster (timestamp + short commit hash)
+          CACHE_BUSTER="$(date +%s)-$(git rev-parse --short HEAD)"
+          echo "Generated cache buster: $CACHE_BUSTER"
+
+          # Replace cache buster placeholder in main script tag
+          sed -i "s/CACHE_BUSTER_PLACEHOLDER/$CACHE_BUSTER/g" _build/index.html
+
+          # Cache bust all ES6 module imports in JavaScript files
+          echo "Adding cache busters to module imports..."
+          find _build -name "*.js" -type f -exec sed -i "s|from '\(\./[^']*\.js\)'|from '\1?v=$CACHE_BUSTER'|g" {} \;
+          find _build -name "*.js" -type f -exec sed -i "s|from \"\(\./[^\"]*\.js\)\"|from \"\1?v=$CACHE_BUSTER\"|g" {} \;
+
+          # Also handle dynamic imports if any exist
+          find _build -name "*.js" -type f -exec sed -i "s|import('\(\./[^']*\.js\)')|import('\1?v=$CACHE_BUSTER')|g" {} \;
+          find _build -name "*.js" -type f -exec sed -i "s|import(\"\(\./[^\"]*\.js\)\")|import(\"\1?v=$CACHE_BUSTER\")|g" {} \;
+
+          # Replace weather API key
           if [ -n "$WEATHER_API_KEY" ]; then
             sed -i "s/WEATHER_API_KEY_PLACEHOLDER/$WEATHER_API_KEY/g" _build/index.html
           else
             echo "Warning: WEATHER_API_KEY secret not set"
           fi
+
+          echo "Cache busting complete. All modules will have version: $CACHE_BUSTER"
         env:
           WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
 
