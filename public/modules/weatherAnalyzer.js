@@ -84,13 +84,35 @@ export class WeatherAnalyzer {
    */
   static analyzeForecasts(forecasts) {
     let maxTemp = -Infinity;
+    let minTemp = Infinity;
     let maxRainChance = 0;
     let maxWind = -Infinity;
+    let totalHumidity = 0;
+    let visibilitySum = 0;
+    let validVisibilityCount = 0;
+    let feelsLikeSum = 0;
+    let feelsLikeCount = 0;
+    let weatherConditions = [];
+    let weatherDescriptions = [];
+
+    // Get sunrise/sunset from the first forecast (should be same for all today's forecasts)
+    const firstForecast = forecasts[0];
+    const sunrise = firstForecast?.sys?.sunrise;
+    const sunset = firstForecast?.sys?.sunset;
 
     for (const forecast of forecasts) {
       // Temperature analysis
       const temp = Math.round(forecast.main.temp);
-      maxTemp = Math.max(maxTemp, temp);
+      const tempMin = Math.round(forecast.main.temp_min);
+      const tempMax = Math.round(forecast.main.temp_max);
+      const feelsLike = Math.round(forecast.main.feels_like);
+
+      maxTemp = Math.max(maxTemp, temp, tempMax);
+      minTemp = Math.min(minTemp, temp, tempMin);
+
+      // Feels like temperature
+      feelsLikeSum += feelsLike;
+      feelsLikeCount++;
 
       // Rain chance analysis
       const rainChance = this.calculateRainChance(forecast);
@@ -99,7 +121,31 @@ export class WeatherAnalyzer {
       // Wind analysis (convert m/s to mph)
       const windMph = Math.round(forecast.wind.speed * 2.237);
       maxWind = Math.max(maxWind, windMph);
+
+      // Humidity analysis
+      totalHumidity += forecast.main.humidity;
+
+      // Visibility analysis (OpenWeatherMap provides visibility in meters)
+      if (forecast.visibility) {
+        visibilitySum += forecast.visibility;
+        validVisibilityCount++;
+      }
+
+      // Weather conditions and descriptions
+      if (forecast.weather && forecast.weather.length > 0) {
+        weatherConditions.push(forecast.weather[0].main);
+        weatherDescriptions.push(forecast.weather[0].description);
+      }
     }
+
+    // Calculate averages
+    const avgHumidity = Math.round(totalHumidity / forecasts.length);
+    const avgVisibility = validVisibilityCount > 0 ? Math.round(visibilitySum / validVisibilityCount) : null;
+    const avgFeelsLike = feelsLikeCount > 0 ? Math.round(feelsLikeSum / feelsLikeCount) : maxTemp;
+
+    // Determine primary weather condition and description
+    const primaryCondition = this.getMostCommonCondition(weatherConditions);
+    const primaryDescription = this.getMostCommonCondition(weatherDescriptions);
 
     // Analyze rain timing for better planning
     const rainTiming = this.analyzeRainTiming(forecasts);
@@ -109,11 +155,40 @@ export class WeatherAnalyzer {
 
     return {
       maxTemp,
+      minTemp: minTemp === Infinity ? null : minTemp,
       minRain: Math.round(maxRainChance),
       maxWind,
+      humidity: avgHumidity,
+      visibility: avgVisibility,
+      feelsLike: avgFeelsLike,
+      weatherCondition: primaryCondition,
+      weatherDescription: primaryDescription,
+      sunrise,
+      sunset,
       rainTiming,
       timeBasedAnalysis
     };
+  }
+
+  /**
+   * Get most common weather condition from array
+   */
+  static getMostCommonCondition(conditions) {
+    if (!conditions.length) return null;
+
+    const frequency = {};
+    let maxCount = 0;
+    let mostCommon = conditions[0];
+
+    conditions.forEach(condition => {
+      frequency[condition] = (frequency[condition] || 0) + 1;
+      if (frequency[condition] > maxCount) {
+        maxCount = frequency[condition];
+        mostCommon = condition;
+      }
+    });
+
+    return mostCommon;
   }
 
   /**

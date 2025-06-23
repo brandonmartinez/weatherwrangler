@@ -43,7 +43,6 @@ export const DOM_ELEMENTS = {
   error: 'error',
   locationPrompt: 'locationPrompt',
   weatherResults: 'weatherResults',
-  weatherTitle: 'weatherTitle',
   jeepImage: 'jeepImage',
   weatherDate: 'weatherDate',
   lastUpdated: 'lastUpdated',

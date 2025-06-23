@@ -74,9 +74,13 @@
       property="og:description"
       content="Simple weather to recommend driving topless or doorless."
     />
-    <meta property="og:image" content="/images/opengraph-facebook.jpg" />
-    <meta property="og:image" content="/images/opengraph-linkedin.jpg" />
-    <meta property="og:image" content="/images/opengraph-pinterest.jpg" />
+    <meta property="og:image" content="/images/opengraph.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Weather Wrangler - Simple weather recommendations for driving your Jeep topless or doorless"
+    />
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:domain" content="weatherwrangler.com" />
     <meta property="twitter:url" content="https://www.weatherwrangler.com" />
@@ -205,58 +209,154 @@
           alt=""
           class="hidden mx-auto rounded-t-xl max-w-full h-auto"
         />
-        <div class="inline-flex shadow-xs rounded-md w-full max-w-full">
+        <div
+          id="suggestionBar"
+          class="inline-flex shadow-xs rounded-md w-full max-w-full"
+        >
           <div
-            class="focus:z-10 flex-1 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 border border-gray-200 dark:border-gray-700 font-medium text-blue-700 text-center text-sm focus:text-blue-700 dark:hover:text-white dark:focus:text-white dark:text-white cursor-pointer focus:ring-2 focus:ring-blue-700 dark:focus:ring-blue-500"
+            class="focus:z-10 flex flex-1 justify-center items-center bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 border border-gray-200 dark:border-gray-700 font-medium text-blue-700 text-lg focus:text-blue-700 dark:hover:text-white dark:focus:text-white dark:text-white cursor-pointer focus:ring-2 focus:ring-blue-700 dark:focus:ring-blue-500"
           >
             <span id="cityName"></span>
           </div>
           <div
-            class="focus:z-10 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 border border-gray-200 dark:border-gray-700 font-medium text-blue-700 text-sm focus:text-blue-700 dark:hover:text-white dark:focus:text-white dark:text-white cursor-pointer focus:ring-2 focus:ring-blue-700 dark:focus:ring-blue-500"
+            class="focus:z-10 flex justify-center items-center bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 border border-gray-200 dark:border-gray-700 font-medium text-blue-700 text-sm focus:text-blue-700 dark:hover:text-white dark:focus:text-white dark:text-white cursor-pointer focus:ring-2 focus:ring-blue-700 dark:focus:ring-blue-500"
           >
-            Top: <span id="topStatus"></span>
+            Top:&nbsp;<span id="topStatus"></span>
           </div>
           <div
-            class="focus:z-10 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 border border-gray-200 dark:border-gray-700 font-medium text-blue-700 text-sm focus:text-blue-700 dark:hover:text-white dark:focus:text-white dark:text-white cursor-pointer focus:ring-2 focus:ring-blue-700 dark:focus:ring-blue-500"
+            class="focus:z-10 flex justify-center items-center bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 border border-gray-200 dark:border-gray-700 font-medium text-blue-700 text-sm focus:text-blue-700 dark:hover:text-white dark:focus:text-white dark:text-white cursor-pointer focus:ring-2 focus:ring-blue-700 dark:focus:ring-blue-500"
           >
-            Doors: <span id="doorsStatus"></span>
+            Doors:&nbsp;<span id="doorsStatus"></span>
           </div>
         </div>
         <div class="p-6">
-          <h1
-            id="weatherTitle"
-            class="mb-6 font-bold text-2xl text-center"
-          ></h1>
-
-          <div class="">
-            <p class="">
-              <strong>Date:</strong> <span id="weatherDate"></span>
-            </p>
-            <p>
-              <strong>Max Temperature:</strong> <span id="maxTemp"></span>°F
-            </p>
-            <p><strong>Rain Chance:</strong> <span id="rainChance"></span>%</p>
-            <p>
-              <strong>Max Wind Speed:</strong>
-              <span id="windSpeed"></span> MPH
-            </p>
-
-            <!-- Rain timing information -->
-            <div
-              id="rainTiming"
-              class="hidden bg-blue-50 mt-3 p-3 border-blue-400 border-l-4 rounded-md"
-            >
-              <p class="font-medium text-blue-800 text-sm">☔ Rain Timing</p>
-              <p id="rainTimingDetails" class="mt-1 text-blue-700 text-sm"></p>
+          <!-- Weather Overview Header -->
+          <div class="mb-4 pb-4 border-gray-200 border-b">
+            <div class="flex justify-between items-center mb-2">
+              <h2 class="font-bold text-gray-900 text-xl">Today's Weather</h2>
+              <div class="text-gray-500 text-sm">
+                <span id="weatherDate"></span>
+              </div>
             </div>
-
-            <!-- Additional explanations/tips -->
-            <div id="weatherExplanations" class="space-y-2 hidden mt-3"></div>
-
-            <p class="mt-4 text-gray-600 text-xs">
-              <strong>Last Updated:</strong> <span id="lastUpdated"></span>
-            </p>
+            <div class="flex justify-between items-center">
+              <div class="flex items-center space-x-4">
+                <div class="font-bold text-3xl text-gray-900">
+                  <span id="maxTemp"></span>°F
+                </div>
+                <div class="text-gray-600 text-sm">
+                  <div>Feels like <span id="feelsLike">--</span>°F</div>
+                  <div class="mt-1 text-xs">
+                    High: <span id="highTemp">--</span>°F • Low:
+                    <span id="lowTemp">--</span>°F
+                  </div>
+                </div>
+              </div>
+              <div id="weatherIcon" class="text-4xl">☀️</div>
+            </div>
+            <div
+              class="mt-2 text-gray-700 text-sm capitalize"
+              id="weatherDescription"
+            >
+              <!-- Weather description will be inserted here -->
+            </div>
           </div>
+
+          <!-- Weather Details Grid -->
+          <div class="gap-4 grid grid-cols-2 mb-4" id="weatherGrid">
+            <div class="bg-gray-50 p-3 rounded-lg">
+              <div class="flex justify-between items-center">
+                <div class="text-gray-600 text-sm">💧 Rain Chance</div>
+                <div class="font-semibold text-blue-600">
+                  <span id="rainChance"></span>%
+                </div>
+              </div>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-lg">
+              <div class="flex justify-between items-center">
+                <div class="text-gray-600 text-sm">💨 Wind</div>
+                <div class="font-semibold text-gray-700">
+                  <span id="windSpeed"></span> MPH
+                </div>
+              </div>
+            </div>
+            <!-- Additional Weather Details (Initially Hidden) -->
+            <div class="hidden bg-gray-50 p-3 rounded-lg" id="humidityCard">
+              <div class="flex justify-between items-center">
+                <div class="text-gray-600 text-sm">💧 Humidity</div>
+                <div class="font-semibold text-gray-700">
+                  <span id="humidity">--</span>%
+                </div>
+              </div>
+            </div>
+            <div class="hidden bg-gray-50 p-3 rounded-lg" id="visibilityCard">
+              <div class="flex justify-between items-center">
+                <div class="text-gray-600 text-sm">👁️ Visibility</div>
+                <div class="font-semibold text-gray-700">
+                  <span id="visibility">--</span> mi
+                </div>
+              </div>
+            </div>
+            <div class="hidden bg-gray-50 p-3 rounded-lg" id="uvIndexCard">
+              <div class="flex justify-between items-center">
+                <div class="text-gray-600 text-sm">🌡️ UV Index</div>
+                <div class="font-semibold" id="uvIndex">
+                  <span class="text-gray-700">--</span>
+                </div>
+              </div>
+            </div>
+            <div class="hidden bg-gray-50 p-3 rounded-lg" id="sunriseCard">
+              <div class="flex justify-between items-center">
+                <div class="text-gray-600 text-sm">🌅 Sunrise</div>
+                <div class="font-semibold text-gray-700" id="sunrise">
+                  --:--
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Show More Button -->
+          <div class="mb-4 text-center">
+            <button
+              id="toggleWeatherDetails"
+              class="bg-white hover:bg-gray-50 px-3 py-1 border border-gray-300 rounded-full text-gray-500 text-xs hover:text-gray-700 transition-colors cursor-pointer"
+            >
+              <span id="toggleText">+ More details</span>
+            </button>
+          </div>
+
+          <!-- Rain timing information -->
+          <div
+            id="rainTiming"
+            class="hidden bg-blue-50 mt-3 p-3 border-blue-400 border-l-4 rounded-md"
+          >
+            <p class="font-medium text-blue-800 text-sm">☔ Rain Timing</p>
+            <p id="rainTimingDetails" class="mt-1 text-blue-700 text-sm"></p>
+          </div>
+
+          <!-- Separator for recommendations -->
+          <div class="mt-4 pt-4 border-gray-300 border-t">
+            <h3 class="mb-3 font-semibold text-gray-900 text-lg">
+              Jeep Recommendations
+            </h3>
+            <!-- Additional explanations/tips -->
+            <div id="weatherExplanations" class="space-y-2 hidden"></div>
+          </div>
+
+          <p
+            class="mt-4 pt-2 border-gray-100 border-t text-center text-gray-400 text-xs"
+          >
+            <strong>Last Updated:</strong> <span id="lastUpdated"></span>
+          </p>
+          <p class="mt-4 text-center text-gray-400 text-xs">
+            Weather data by
+            <a
+              href="https://openweathermap.org/"
+              target="_blank"
+              rel="noopener"
+              class="hover:text-gray-600 underline"
+              >OpenWeather</a
+            >
+          </p>
         </div>
       </div>
 
@@ -268,14 +368,14 @@
             title="Use Current Location"
             class="focus:z-10 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-s-lg font-medium text-blue-700 text-sm focus:text-blue-700 dark:hover:text-white dark:focus:text-white dark:text-white cursor-pointer focus:ring-2 focus:ring-blue-700 dark:focus:ring-blue-500"
           >
-            🌍 Use Location
+            🌍 <span class="sm:inline hidden">Use Location</span>
           </button>
           <button
             id="locationToggle"
             title="Change Location"
             class="focus:z-10 bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 px-4 py-2 border border-gray-200 dark:border-gray-700 border-t border-b font-medium text-blue-700 text-sm focus:text-blue-700 dark:hover:text-white dark:focus:text-white dark:text-white cursor-pointer focus:ring-2 focus:ring-blue-700 dark:focus:ring-blue-500"
           >
-            🏘️ Change Location
+            🏘️ <span class="sm:inline hidden">Change Location</span>
           </button>
           <button
             id="settingsToggle"

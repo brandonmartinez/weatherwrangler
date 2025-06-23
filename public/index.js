@@ -137,6 +137,12 @@ class WeatherWranglerApp {
     if (refreshWeatherBtn) {
       refreshWeatherBtn.addEventListener('click', this.handleRefreshWeather.bind(this));
     }
+
+    // Weather details toggle
+    const toggleWeatherDetails = this.domManager.getElement('toggleWeatherDetails');
+    if (toggleWeatherDetails) {
+      toggleWeatherDetails.addEventListener('click', () => this.domManager.toggleAdditionalWeather());
+    }
   }
 
   /**

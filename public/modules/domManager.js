@@ -10,6 +10,34 @@ export class DOMManager {
   }
 
   /**
+   * Toggle additional weather details visibility
+   */
+  toggleAdditionalWeather() {
+    const additionalCards = ['humidityCard', 'visibilityCard', 'uvIndexCard', 'sunriseCard'];
+    const toggleText = this.getElement('toggleText');
+
+    const firstCard = this.getElement(additionalCards[0]);
+    if (!firstCard) return;
+
+    const isHidden = firstCard.classList.contains('hidden');
+
+    additionalCards.forEach(cardId => {
+      const card = this.getElement(cardId);
+      if (card) {
+        if (isHidden) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      }
+    });
+
+    if (toggleText) {
+      toggleText.textContent = isHidden ? '- Less details' : '+ More details';
+    }
+  }
+
+  /**
    * Get DOM element with caching
    */
   getElement(id) {
@@ -110,12 +138,6 @@ export class DOMManager {
       weatherResults.classList.remove('hidden');
     }
 
-    // Update title
-    const weatherTitle = this.getElement(DOM_ELEMENTS.weatherTitle);
-    if (weatherTitle) {
-      weatherTitle.textContent = `Weather wrangled for today in ${result.cityName}`;
-    }
-
     // Update city
     const cityName = this.getElement(DOM_ELEMENTS.cityName);
     if (cityName) {
@@ -177,13 +199,48 @@ export class DOMManager {
       })
       : 'Just now';
 
+    // Get weather description and icon
+    const weatherDescription = result.weatherDescription || 'Clear skies';
+    const weatherIcon = this.getWeatherIcon(result.weatherCondition);
+
+    // Format UV Index with color coding
+    const uvIndexElement = this.getElement('uvIndex');
+    if (uvIndexElement && result.uvIndex !== undefined) {
+      const uvValue = Math.round(result.uvIndex);
+      const uvColor = this.getUVIndexColor(uvValue);
+      uvIndexElement.innerHTML = `<span class="${uvColor}">${uvValue}</span>`;
+    }
+
+    // Format sunrise/sunset times
+    const formatTime = (timestamp) => {
+      if (!timestamp) return '--:--';
+      return new Date(timestamp * 1000).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+    };
+
     const elements = {
       [DOM_ELEMENTS.weatherDate]: dateString,
       [DOM_ELEMENTS.lastUpdated]: lastUpdatedString,
       [DOM_ELEMENTS.maxTemp]: result.maxTemp,
       [DOM_ELEMENTS.rainChance]: result.minRain,
-      [DOM_ELEMENTS.windSpeed]: result.maxWind
+      [DOM_ELEMENTS.windSpeed]: result.maxWind,
+      'weatherDescription': weatherDescription,
+      'feelsLike': result.feelsLike || result.maxTemp,
+      'highTemp': result.maxTemp,
+      'lowTemp': result.minTemp || '--',
+      'humidity': result.humidity || '--',
+      'visibility': result.visibility ? Math.round(result.visibility / 1000 * 0.621371) : '--', // Convert m to miles
+      'sunrise': formatTime(result.sunrise)
     };
+
+    // Update weather icon
+    const iconElement = this.getElement('weatherIcon');
+    if (iconElement) {
+      iconElement.textContent = weatherIcon;
+    }
 
     Object.entries(elements).forEach(([elementId, value]) => {
       const element = this.getElement(elementId);
@@ -191,6 +248,36 @@ export class DOMManager {
         element.textContent = value;
       }
     });
+  }
+
+  /**
+   * Get weather icon based on condition
+   */
+  getWeatherIcon(condition) {
+    const iconMap = {
+      'clear': '☀️',
+      'clouds': '☁️',
+      'rain': '🌧️',
+      'drizzle': '🌦️',
+      'thunderstorm': '⛈️',
+      'snow': '❄️',
+      'mist': '🌫️',
+      'fog': '🌫️',
+      'haze': '🌫️'
+    };
+
+    return iconMap[condition?.toLowerCase()] || '☀️';
+  }
+
+  /**
+   * Get UV Index color class
+   */
+  getUVIndexColor(uvIndex) {
+    if (uvIndex <= 2) return 'text-green-600';
+    if (uvIndex <= 5) return 'text-yellow-600';
+    if (uvIndex <= 7) return 'text-orange-600';
+    if (uvIndex <= 10) return 'text-red-600';
+    return 'text-purple-600';
   }
 
   /**
@@ -341,7 +428,7 @@ export class DOMManager {
             <details class="cursor-pointer">
               <summary class="font-medium text-gray-800 hover:text-gray-900 flex items-center gap-2">
                 <span>📊</span>
-                <span>Technical Details</span>
+                <span>Additional Details</span>
                 <span class="ml-auto text-gray-500">▼</span>
               </summary>
               <div class="mt-2 pl-6 text-gray-600 border-t border-gray-200 pt-2">${detailsContent}</div>
