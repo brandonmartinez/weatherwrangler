@@ -33,7 +33,7 @@ export class DOMManager {
     });
 
     if (toggleText) {
-      toggleText.textContent = isHidden ? '- Less details' : '+ More details';
+      toggleText.textContent = isHidden ? '➖' : '➕';
     }
   }
 

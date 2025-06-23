@@ -262,8 +262,8 @@
           </div>
 
           <!-- Weather Details Grid -->
-          <div class="gap-4 grid grid-cols-2 mb-4" id="weatherGrid">
-            <div class="bg-gray-50 p-3 rounded-lg">
+          <div class="gap-4 grid grid-cols-9 mb-4" id="weatherGrid">
+            <div class="col-span-4 bg-gray-50 p-3 rounded-lg">
               <div class="flex justify-between items-center">
                 <div class="text-gray-600 text-sm">💧 Rain Chance</div>
                 <div class="font-semibold text-blue-600">
@@ -271,7 +271,7 @@
                 </div>
               </div>
             </div>
-            <div class="bg-gray-50 p-3 rounded-lg">
+            <div class="col-span-4 bg-gray-50 p-3 rounded-lg">
               <div class="flex justify-between items-center">
                 <div class="text-gray-600 text-sm">💨 Wind</div>
                 <div class="font-semibold text-gray-700">
@@ -279,8 +279,16 @@
                 </div>
               </div>
             </div>
+            <div class="col-span-1">
+              <button
+                id="toggleWeatherDetails"
+                class="flex justify-center items-center rounded-lg w-full h-full min-h-[52px] text-gray-500 text-sm hover:text-gray-700 transition-colors cursor-pointer"
+              >
+                <span id="toggleText">➕</span>
+              </button>
+            </div>
             <!-- Additional Weather Details (Initially Hidden) -->
-            <div class="hidden bg-gray-50 p-3 rounded-lg" id="humidityCard">
+            <div class="hidden col-span-4 bg-gray-50 p-3 rounded-lg" id="humidityCard">
               <div class="flex justify-between items-center">
                 <div class="text-gray-600 text-sm">💧 Humidity</div>
                 <div class="font-semibold text-gray-700">
@@ -288,7 +296,7 @@
                 </div>
               </div>
             </div>
-            <div class="hidden bg-gray-50 p-3 rounded-lg" id="visibilityCard">
+            <div class="hidden col-span-4 bg-gray-50 p-3 rounded-lg" id="visibilityCard">
               <div class="flex justify-between items-center">
                 <div class="text-gray-600 text-sm">👁️ Visibility</div>
                 <div class="font-semibold text-gray-700">
@@ -296,7 +304,8 @@
                 </div>
               </div>
             </div>
-            <div class="hidden bg-gray-50 p-3 rounded-lg" id="uvIndexCard">
+            <div class="hidden col-span-1"></div>
+            <div class="hidden col-span-4 bg-gray-50 p-3 rounded-lg" id="uvIndexCard">
               <div class="flex justify-between items-center">
                 <div class="text-gray-600 text-sm">🌡️ UV Index</div>
                 <div class="font-semibold" id="uvIndex">
@@ -304,7 +313,7 @@
                 </div>
               </div>
             </div>
-            <div class="hidden bg-gray-50 p-3 rounded-lg" id="sunriseCard">
+            <div class="hidden col-span-4 bg-gray-50 p-3 rounded-lg" id="sunriseCard">
               <div class="flex justify-between items-center">
                 <div class="text-gray-600 text-sm">🌅 Sunrise</div>
                 <div class="font-semibold text-gray-700" id="sunrise">
@@ -312,16 +321,7 @@
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Show More Button -->
-          <div class="mb-4 text-center">
-            <button
-              id="toggleWeatherDetails"
-              class="bg-white hover:bg-gray-50 px-3 py-1 border border-gray-300 rounded-full text-gray-500 text-xs hover:text-gray-700 transition-colors cursor-pointer"
-            >
-              <span id="toggleText">+ More details</span>
-            </button>
+            <div class="hidden col-span-1"></div>
           </div>
 
           <!-- Rain timing information -->
