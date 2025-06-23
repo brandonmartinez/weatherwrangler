@@ -153,24 +153,24 @@
       <!-- Loading state -->
       <div
         id="loading"
-        class="bg-white shadow-md mt-10 p-6 rounded-xl max-w-full overflow-hidden"
+        class="bg-white dark:bg-gray-800 shadow-md mt-10 p-6 rounded-xl max-w-full overflow-hidden"
       >
-        <div class="text-gray-600">Loading...</div>
+        <div class="text-gray-600 dark:text-gray-300">Loading...</div>
       </div>
 
       <!-- Error state -->
       <div
         id="error"
-        class="hidden bg-white shadow-md mt-10 p-6 rounded-xl max-w-full text-red-600 overflow-hidden"
+        class="hidden bg-white dark:bg-gray-800 shadow-md mt-10 p-6 rounded-xl max-w-full text-red-600 dark:text-red-400 overflow-hidden"
       ></div>
 
       <!-- Location form state -->
       <div
         id="locationPrompt"
-        class="hidden bg-white shadow-md mt-10 p-6 rounded-xl max-w-full overflow-hidden"
+        class="hidden bg-white dark:bg-gray-800 shadow-md mt-10 p-6 rounded-xl max-w-full overflow-hidden"
       >
-        <h1 class="mb-4 font-bold text-2xl text-center">Weather Wrangler</h1>
-        <p class="mb-4 text-center text-gray-600">
+        <h1 class="mb-4 font-bold text-2xl text-center text-gray-900 dark:text-white">Weather Wrangler</h1>
+        <p class="mb-4 text-center text-gray-600 dark:text-gray-300">
           Please enter your location to get weather recommendations
         </p>
 
@@ -181,7 +181,7 @@
                 type="text"
                 id="zipcodePrompt"
                 name="zipcodePrompt"
-                class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                class="block dark:bg-gray-700 shadow-sm border-gray-300 focus:border-indigo-500 dark:border-gray-600 dark:focus:border-indigo-400 rounded-md w-full sm:text-sm dark:text-white focus:ring-indigo-500 dark:focus:ring-indigo-400"
                 placeholder="Enter Zip Code"
                 autocomplete="off"
                 data-1p-ignore
@@ -190,7 +190,7 @@
 
             <button
               type="submit"
-              class="bg-indigo-600 mt-2 px-4 py-2 rounded-md w-full text-white"
+              class="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 mt-2 px-4 py-2 rounded-md w-full text-white"
             >
               Get Weather
             </button>
@@ -201,7 +201,7 @@
       <!-- Weather results -->
       <div
         id="weatherResults"
-        class="hidden bg-white shadow-md mt-10 rounded-xl max-w-full overflow-hidden"
+        class="hidden bg-white dark:bg-gray-800 shadow-md mt-10 rounded-xl max-w-full overflow-hidden"
       >
         <img
           id="jeepImage"
@@ -231,19 +231,19 @@
         </div>
         <div class="p-6">
           <!-- Weather Overview Header -->
-          <div class="mb-4 pb-4 border-gray-200 border-b">
+          <div class="mb-4 pb-4 border-gray-200 dark:border-gray-600 border-b">
             <div class="flex justify-between items-center mb-2">
-              <h2 class="font-bold text-gray-900 text-xl">Today's Weather</h2>
-              <div class="text-gray-500 text-sm">
+              <h2 class="font-bold text-gray-900 text-xl dark:text-white">Today's Weather</h2>
+              <div class="text-gray-500 text-sm dark:text-gray-400">
                 <span id="weatherDate"></span>
               </div>
             </div>
             <div class="flex justify-between items-center">
               <div class="flex items-center space-x-4">
-                <div class="font-bold text-3xl text-gray-900">
+                <div class="font-bold text-3xl text-gray-900 dark:text-white">
                   <span id="maxTemp"></span>°F
                 </div>
-                <div class="text-gray-600 text-sm">
+                <div class="text-gray-600 text-sm dark:text-gray-300">
                   <div>Feels like <span id="feelsLike">--</span>°F</div>
                   <div class="mt-1 text-xs">
                     High: <span id="highTemp">--</span>°F • Low:
@@ -254,7 +254,7 @@
               <div id="weatherIcon" class="text-4xl">☀️</div>
             </div>
             <div
-              class="mt-2 text-gray-700 text-sm capitalize"
+              class="mt-2 text-gray-700 text-sm dark:text-gray-300 capitalize"
               id="weatherDescription"
             >
               <!-- Weather description will be inserted here -->
@@ -263,18 +263,18 @@
 
           <!-- Weather Details Grid -->
           <div class="gap-4 grid grid-cols-9 mb-4" id="weatherGrid">
-            <div class="col-span-4 bg-gray-50 p-3 rounded-lg">
+            <div class="col-span-4 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
               <div class="flex justify-between items-center">
-                <div class="text-gray-600 text-sm">💧 Rain Chance</div>
-                <div class="font-semibold text-blue-600">
+                <div class="text-gray-600 text-sm dark:text-gray-300">💧 Rain Chance</div>
+                <div class="font-semibold text-blue-600 dark:text-blue-400">
                   <span id="rainChance"></span>%
                 </div>
               </div>
             </div>
-            <div class="col-span-4 bg-gray-50 p-3 rounded-lg">
+            <div class="col-span-4 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
               <div class="flex justify-between items-center">
-                <div class="text-gray-600 text-sm">💨 Wind</div>
-                <div class="font-semibold text-gray-700">
+                <div class="text-gray-600 text-sm dark:text-gray-300">💨 Wind</div>
+                <div class="font-semibold text-gray-700 dark:text-gray-200">
                   <span id="windSpeed"></span> MPH
                 </div>
               </div>
@@ -282,41 +282,41 @@
             <div class="col-span-1">
               <button
                 id="toggleWeatherDetails"
-                class="flex justify-center items-center rounded-lg w-full h-full min-h-[52px] text-gray-500 text-sm hover:text-gray-700 transition-colors cursor-pointer"
+                class="flex justify-center items-center rounded-lg w-full h-full min-h-[52px] text-gray-500 text-sm hover:text-gray-700 dark:hover:text-gray-200 dark:text-gray-400 transition-colors cursor-pointer"
               >
                 <span id="toggleText">➕</span>
               </button>
             </div>
             <!-- Additional Weather Details (Initially Hidden) -->
-            <div class="hidden col-span-4 bg-gray-50 p-3 rounded-lg" id="humidityCard">
+            <div class="hidden col-span-4 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg" id="humidityCard">
               <div class="flex justify-between items-center">
-                <div class="text-gray-600 text-sm">💧 Humidity</div>
-                <div class="font-semibold text-gray-700">
+                <div class="text-gray-600 text-sm dark:text-gray-300">💧 Humidity</div>
+                <div class="font-semibold text-gray-700 dark:text-gray-200">
                   <span id="humidity">--</span>%
                 </div>
               </div>
             </div>
-            <div class="hidden col-span-4 bg-gray-50 p-3 rounded-lg" id="visibilityCard">
+            <div class="hidden col-span-4 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg" id="visibilityCard">
               <div class="flex justify-between items-center">
-                <div class="text-gray-600 text-sm">👁️ Visibility</div>
-                <div class="font-semibold text-gray-700">
+                <div class="text-gray-600 text-sm dark:text-gray-300">👁️ Visibility</div>
+                <div class="font-semibold text-gray-700 dark:text-gray-200">
                   <span id="visibility">--</span> mi
                 </div>
               </div>
             </div>
             <div class="hidden col-span-1"></div>
-            <div class="hidden col-span-4 bg-gray-50 p-3 rounded-lg" id="uvIndexCard">
+            <div class="hidden col-span-4 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg" id="uvIndexCard">
               <div class="flex justify-between items-center">
-                <div class="text-gray-600 text-sm">🌡️ UV Index</div>
+                <div class="text-gray-600 text-sm dark:text-gray-300">🌡️ UV Index</div>
                 <div class="font-semibold" id="uvIndex">
-                  <span class="text-gray-700">--</span>
+                  <span class="text-gray-700 dark:text-gray-200">--</span>
                 </div>
               </div>
             </div>
-            <div class="hidden col-span-4 bg-gray-50 p-3 rounded-lg" id="sunriseCard">
+            <div class="hidden col-span-4 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg" id="sunriseCard">
               <div class="flex justify-between items-center">
-                <div class="text-gray-600 text-sm">🌅 Sunrise</div>
-                <div class="font-semibold text-gray-700" id="sunrise">
+                <div class="text-gray-600 text-sm dark:text-gray-300">🌅 Sunrise</div>
+                <div class="font-semibold text-gray-700 dark:text-gray-200" id="sunrise">
                   --:--
                 </div>
               </div>
@@ -327,15 +327,15 @@
           <!-- Rain timing information -->
           <div
             id="rainTiming"
-            class="hidden bg-blue-50 mt-3 p-3 border-blue-400 border-l-4 rounded-md"
+            class="hidden bg-blue-50 dark:bg-blue-900 mt-3 p-3 border-blue-400 dark:border-blue-600 border-l-4 rounded-md"
           >
-            <p class="font-medium text-blue-800 text-sm">☔ Rain Timing</p>
-            <p id="rainTimingDetails" class="mt-1 text-blue-700 text-sm"></p>
+            <p class="font-medium text-blue-800 text-sm dark:text-blue-200">☔ Rain Timing</p>
+            <p id="rainTimingDetails" class="mt-1 text-blue-700 text-sm dark:text-blue-300"></p>
           </div>
 
           <!-- Separator for recommendations -->
-          <div class="mt-4 pt-4 border-gray-300 border-t">
-            <h3 class="mb-3 font-semibold text-gray-900 text-lg">
+          <div class="mt-4 pt-4 border-gray-300 dark:border-gray-600 border-t">
+            <h3 class="mb-3 font-semibold text-gray-900 text-lg dark:text-white">
               Jeep Recommendations
             </h3>
             <!-- Additional explanations/tips -->
@@ -343,17 +343,17 @@
           </div>
 
           <p
-            class="mt-4 pt-2 border-gray-100 border-t text-center text-gray-400 text-xs"
+            class="mt-4 pt-2 border-gray-100 dark:border-gray-700 border-t text-center text-gray-400 text-xs dark:text-gray-500"
           >
             <strong>Last Updated:</strong> <span id="lastUpdated"></span>
           </p>
-          <p class="mt-4 text-center text-gray-400 text-xs">
+          <p class="mt-4 text-center text-gray-400 text-xs dark:text-gray-500">
             Weather data by
             <a
               href="https://openweathermap.org/"
               target="_blank"
               rel="noopener"
-              class="hover:text-gray-600 underline"
+              class="hover:text-gray-600 dark:hover:text-gray-300 underline"
               >OpenWeather</a
             >
           </p>
@@ -401,14 +401,14 @@
         style="display: none"
       >
         <div
-          class="bg-white rounded-xl w-full max-w-md max-h-screen overflow-y-auto"
+          class="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md max-h-screen overflow-y-auto"
         >
           <div class="p-6">
             <div class="flex justify-between items-center mb-4">
-              <h2 class="font-bold text-lg">Change Location</h2>
+              <h2 class="font-bold text-gray-900 text-lg dark:text-white">Change Location</h2>
               <button
                 id="closeLocationModal"
-                class="text-gray-500 text-xl hover:text-gray-700"
+                class="text-gray-500 text-xl hover:text-gray-700 dark:hover:text-gray-200 dark:text-gray-400"
               >
                 ×
               </button>
@@ -419,7 +419,7 @@
                 <div>
                   <label
                     for="zipcode"
-                    class="block font-medium text-gray-700 text-sm"
+                    class="block font-medium text-gray-700 text-sm dark:text-gray-300"
                   >
                     Change Location (Zip Code):
                   </label>
@@ -427,7 +427,7 @@
                     type="text"
                     id="zipcode"
                     name="zipcode"
-                    class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                    class="block dark:bg-gray-700 shadow-sm border-gray-300 focus:border-indigo-500 dark:border-gray-600 dark:focus:border-indigo-400 rounded-md w-full sm:text-sm dark:text-white focus:ring-indigo-500 dark:focus:ring-indigo-400"
                     placeholder="Enter Zip Code"
                     autocomplete="off"
                     data-1p-ignore
@@ -436,7 +436,7 @@
 
                 <button
                   type="submit"
-                  class="bg-indigo-600 mt-2 px-4 py-2 rounded-md text-white"
+                  class="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 mt-2 px-4 py-2 rounded-md text-white"
                 >
                   Submit
                 </button>
@@ -453,14 +453,14 @@
         style="display: none"
       >
         <div
-          class="bg-white rounded-xl w-full max-w-md max-h-screen overflow-y-auto"
+          class="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md max-h-screen overflow-y-auto"
         >
           <div class="p-6">
             <div class="flex justify-between items-center mb-4">
-              <h2 class="font-bold text-lg">Weather Threshold Settings</h2>
+              <h2 class="font-bold text-gray-900 text-lg dark:text-white">Weather Threshold Settings</h2>
               <button
                 id="closeModal"
-                class="text-gray-500 text-xl hover:text-gray-700"
+                class="text-gray-500 text-xl hover:text-gray-700 dark:hover:text-gray-200 dark:text-gray-400"
               >
                 ×
               </button>
@@ -471,7 +471,7 @@
                 <div>
                   <label
                     for="tempTopOff"
-                    class="block font-medium text-gray-700 text-sm"
+                    class="block font-medium text-gray-700 text-sm dark:text-gray-300"
                   >
                     Minimum Temperature for Top Off (°F):
                   </label>
@@ -481,7 +481,7 @@
                     name="tempTopOff"
                     min="40"
                     max="100"
-                    class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                    class="block dark:bg-gray-700 shadow-sm border-gray-300 focus:border-indigo-500 dark:border-gray-600 dark:focus:border-indigo-400 rounded-md w-full sm:text-sm dark:text-white focus:ring-indigo-500 dark:focus:ring-indigo-400"
                     placeholder="60"
                   />
                 </div>
@@ -489,7 +489,7 @@
                 <div>
                   <label
                     for="tempDoorsOff"
-                    class="block font-medium text-gray-700 text-sm"
+                    class="block font-medium text-gray-700 text-sm dark:text-gray-300"
                   >
                     Minimum Temperature for Doors Off (°F):
                   </label>
@@ -499,7 +499,7 @@
                     name="tempDoorsOff"
                     min="40"
                     max="100"
-                    class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                    class="block dark:bg-gray-700 shadow-sm border-gray-300 focus:border-indigo-500 dark:border-gray-600 dark:focus:border-indigo-400 rounded-md w-full sm:text-sm dark:text-white focus:ring-indigo-500 dark:focus:ring-indigo-400"
                     placeholder="65"
                   />
                 </div>
@@ -507,7 +507,7 @@
                 <div>
                   <label
                     for="rainThreshold"
-                    class="block font-medium text-gray-700 text-sm"
+                    class="block font-medium text-gray-700 text-sm dark:text-gray-300"
                   >
                     Maximum Rain Chance (%):
                   </label>
@@ -517,7 +517,7 @@
                     name="rainThreshold"
                     min="0"
                     max="50"
-                    class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                    class="block dark:bg-gray-700 shadow-sm border-gray-300 focus:border-indigo-500 dark:border-gray-600 dark:focus:border-indigo-400 rounded-md w-full sm:text-sm dark:text-white focus:ring-indigo-500 dark:focus:ring-indigo-400"
                     placeholder="10"
                   />
                 </div>
@@ -525,7 +525,7 @@
                 <div>
                   <label
                     for="windThreshold"
-                    class="block font-medium text-gray-700 text-sm"
+                    class="block font-medium text-gray-700 text-sm dark:text-gray-300"
                   >
                     Maximum Wind Speed for Doors Off (MPH):
                   </label>
@@ -535,7 +535,7 @@
                     name="windThreshold"
                     min="5"
                     max="40"
-                    class="block shadow-sm border-gray-300 focus:border-indigo-500 rounded-md w-full sm:text-sm focus:ring-indigo-500"
+                    class="block dark:bg-gray-700 shadow-sm border-gray-300 focus:border-indigo-500 dark:border-gray-600 dark:focus:border-indigo-400 rounded-md w-full sm:text-sm dark:text-white focus:ring-indigo-500 dark:focus:ring-indigo-400"
                     placeholder="15"
                   />
                 </div>
@@ -545,7 +545,7 @@
                 <button
                   type="button"
                   id="cancelSettings"
-                  class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded-md text-white"
+                  class="bg-gray-400 hover:bg-gray-500 dark:bg-gray-600 dark:hover:bg-gray-700 px-4 py-2 rounded-md text-white"
                 >
                   Cancel
                 </button>
@@ -553,13 +553,13 @@
                   <button
                     type="button"
                     id="resetSettings"
-                    class="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md text-white"
+                    class="bg-orange-500 hover:bg-orange-600 dark:bg-orange-600 dark:hover:bg-orange-700 px-4 py-2 rounded-md text-white"
                   >
                     Reset to Defaults
                   </button>
                   <button
                     type="submit"
-                    class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md text-white"
+                    class="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 px-4 py-2 rounded-md text-white"
                   >
                     Save Settings
                   </button>
@@ -573,14 +573,14 @@
       <!-- Disclaimer -->
       <div class="mx-auto mt-5 mb-2 container">
         <footer
-          class="mx-auto mb-1 p-4 rounded-xl max-w-md text-center text-gray-400 text-xs"
+          class="mx-auto mb-1 p-4 rounded-xl max-w-md text-center text-gray-400 text-xs dark:text-gray-500"
         >
           Weather Wrangler provides suggestions to help you enjoy the outdoors,
           but weather forecasts are not always accurate. Use your own judgment
           and check local conditions before making decisions.
         </footer>
         <footer
-          class="mx-auto mb-1 p-4 rounded-xl max-w-md text-center text-gray-400 text-xs"
+          class="mx-auto mb-1 p-4 rounded-xl max-w-md text-center text-gray-400 text-xs dark:text-gray-500"
         >
           Jeep® and Wrangler® are registered trademarks of Stellantis. This site
           is not affiliated with or endorsed by Stellantis. All trademarks are

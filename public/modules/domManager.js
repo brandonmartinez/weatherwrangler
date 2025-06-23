@@ -401,46 +401,46 @@ export class DOMManager {
         // Style different types of explanations
         if (explanation.includes('🎯')) {
           // Time-based recommendations - make these prominent
-          explanationEl.className += ' bg-gradient-to-r from-green-50 to-blue-50 text-green-800 border border-green-200 font-medium shadow-sm';
+          explanationEl.className += ' bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-700 font-medium shadow-sm';
           const content = explanation.replace('🎯 ', '');
           explanationEl.innerHTML = `
             <div class="flex items-start gap-3">
               <span class="text-xl flex-shrink-0 mt-0.5">🎯</span>
               <div>
-                <div class="font-semibold text-green-900 mb-1">Smart Recommendation</div>
-                <div class="text-green-800">${content}</div>
+                <div class="font-semibold text-green-900 dark:text-green-100 mb-1">Smart Recommendation</div>
+                <div class="text-green-800 dark:text-green-200">${content}</div>
               </div>
             </div>
           `;
         } else if (explanation.includes('💡')) {
           // Pro tips
-          explanationEl.className += ' bg-amber-50 text-amber-800 border border-amber-200 font-medium';
+          explanationEl.className += ' bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-700 font-medium';
           explanationEl.innerHTML = `<div class="flex items-start gap-2"><span class="text-lg">💡</span><span>${explanation.replace('💡 ', '')}</span></div>`;
         } else if (explanation.includes('ℹ️')) {
           // Info tips
-          explanationEl.className += ' bg-blue-50 text-blue-800 border-l-4 border-blue-400';
+          explanationEl.className += ' bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200 border-l-4 border-blue-400 dark:border-blue-600';
           explanationEl.innerHTML = `<div class="flex items-start gap-2"><span>ℹ️</span><span>${explanation.replace('ℹ️ ', '')}</span></div>`;
         } else if (explanation.includes('📊')) {
           // Technical details - make these collapsible/secondary
-          explanationEl.className += ' bg-gray-50 text-gray-700 border border-gray-200 text-xs';
+          explanationEl.className += ' bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 text-xs';
           const detailsContent = explanation.replace('📊 Technical details: ', '');
           explanationEl.innerHTML = `
             <details class="cursor-pointer">
-              <summary class="font-medium text-gray-800 hover:text-gray-900 flex items-center gap-2">
+              <summary class="font-medium text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-100 flex items-center gap-2">
                 <span>📊</span>
                 <span>Additional Details</span>
-                <span class="ml-auto text-gray-500">▼</span>
+                <span class="ml-auto text-gray-500 dark:text-gray-400">▼</span>
               </summary>
-              <div class="mt-2 pl-6 text-gray-600 border-t border-gray-200 pt-2">${detailsContent}</div>
+              <div class="mt-2 pl-6 text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-600 pt-2">${detailsContent}</div>
             </details>
           `;
         } else if (explanation.includes('too')) {
           // Warning explanations
-          explanationEl.className += ' bg-yellow-50 text-yellow-800 border-l-4 border-yellow-400';
+          explanationEl.className += ' bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200 border-l-4 border-yellow-400 dark:border-yellow-600';
           explanationEl.textContent = explanation;
         } else {
           // Default styling
-          explanationEl.className += ' bg-gray-50 text-gray-800 border-l-4 border-gray-400';
+          explanationEl.className += ' bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border-l-4 border-gray-400 dark:border-gray-600';
           explanationEl.textContent = explanation;
         }
 
