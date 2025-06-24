@@ -1,5 +1,6 @@
 import { STORAGE_KEYS } from './constants.js';
 import { BaseModal } from './baseModal.js';
+import { analytics } from './analytics.js';
 
 /**
  * Location management utilities
@@ -33,26 +34,37 @@ export class LocationManager {
             accuracy: position.coords.accuracy
           };
 
+          analytics.trackLocationChange('geolocation_success', `${position.coords.latitude},${position.coords.longitude}`);
+          analytics.trackEngagement('geolocation_granted');
+
           this.currentLocation = location;
           this.storeLocation(location);
           resolve(location);
         },
         (error) => {
           let errorMessage;
+          let errorType = 'geolocation_error';
+
           switch (error.code) {
             case error.PERMISSION_DENIED:
               errorMessage = "Location access denied by user";
+              errorType = 'geolocation_denied';
               break;
             case error.POSITION_UNAVAILABLE:
               errorMessage = "Location information is unavailable";
+              errorType = 'geolocation_unavailable';
               break;
             case error.TIMEOUT:
               errorMessage = "Location request timed out";
+              errorType = 'geolocation_timeout';
               break;
             default:
               errorMessage = "An unknown error occurred while retrieving location";
+              errorType = 'geolocation_unknown';
               break;
           }
+
+          analytics.trackError(errorType, errorMessage);
           reject(new Error(errorMessage));
         },
         options
@@ -175,6 +187,8 @@ export class LocationModal extends BaseModal {
       }
 
       const location = this.locationManager.storeZipLocation(zipCode);
+      analytics.trackLocationChange('zip_code_modal', zipCode);
+      analytics.trackModalInteraction('location', 'submit');
       this.close();
 
       // Trigger weather refresh after location change
@@ -185,6 +199,7 @@ export class LocationModal extends BaseModal {
       console.log('Location updated:', location);
     } catch (error) {
       console.error('Error updating location:', error);
+      analytics.trackError('location_change_error', error.message);
       alert('Error updating location: ' + error.message);
     }
   }

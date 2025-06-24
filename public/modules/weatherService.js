@@ -1,4 +1,5 @@
 import { WEATHER_CONFIG, STORAGE_KEYS } from './constants.js';
+import { analytics } from './analytics.js';
 
 /**
  * Weather API service with caching and error handling
@@ -20,6 +21,7 @@ export class WeatherService {
 
     if (cachedData) {
       console.log('📄 WeatherService: Using cached data for coords:', lat, lon);
+      analytics.trackWeatherRequest('cache', 'coordinates');
       return cachedData;
     }
 
@@ -31,6 +33,7 @@ export class WeatherService {
     const url = `${this.baseUrl}?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=imperial`;
     const data = await this.makeApiRequest(url);
 
+    analytics.trackWeatherRequest('api', 'coordinates');
     this.cacheWeather(cacheKey, data);
 
     // Add current timestamp for fresh data
@@ -67,8 +70,10 @@ export class WeatherService {
       };
     } catch (error) {
       if (error.message.includes('404')) {
+        analytics.trackError('zip_not_found', zipCode);
         throw new Error(`ZIP code not found: ${zipCode}`);
       }
+      analytics.trackError('geocoding_api_error', error.message);
       throw error;
     }
   }
@@ -83,6 +88,7 @@ export class WeatherService {
 
     if (cachedData) {
       console.log('📄 WeatherService: Using cached data for ZIP:', zipCode);
+      analytics.trackWeatherRequest('cache', 'zip_code');
       return cachedData;
     }
 
@@ -94,6 +100,8 @@ export class WeatherService {
     console.log('🌍 WeatherService: Making weather API request for ZIP:', zipCode);
     const url = `${this.baseUrl}?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${this.apiKey}&units=imperial`;
     const data = await this.makeApiRequest(url);
+
+    analytics.trackWeatherRequest('api', 'zip_code');
 
     // Store location for future use, including the resolved city name
     const locationData = {
@@ -140,13 +148,16 @@ export class WeatherService {
       clearTimeout(timeoutId);
 
       if (error.name === 'AbortError') {
+        analytics.trackError('api_timeout', 'Weather request timed out');
         throw new Error('Weather request timed out. Please try again.');
       }
 
       if (error.message.includes('Failed to fetch')) {
+        analytics.trackError('network_error', 'Failed to fetch weather data');
         throw new Error('Network error. Please check your internet connection.');
       }
 
+      analytics.trackError('api_error', error.message);
       throw error;
     }
   }

@@ -1,5 +1,6 @@
 import { DEFAULT_SETTINGS, STORAGE_KEYS, DOM_ELEMENTS } from './constants.js';
 import { BaseModal } from './baseModal.js';
+import { analytics } from './analytics.js';
 
 /**
  * Settings management utilities
@@ -77,6 +78,12 @@ export class SettingsModal extends BaseModal {
       const newSettings = this.domManager.getSettingsFromForm();
       const validatedSettings = this.settingsManager.saveSettings(newSettings);
 
+      // Track individual settings changes
+      Object.keys(validatedSettings).forEach(key => {
+        analytics.trackSettingsChange(key, validatedSettings[key]);
+      });
+
+      analytics.trackModalInteraction('settings', 'submit');
       this.close();
 
       // Notify about settings change
@@ -85,6 +92,7 @@ export class SettingsModal extends BaseModal {
       }
     } catch (error) {
       console.error('Error saving settings:', error);
+      analytics.trackError('settings_save_error', error.message);
       // Could show an error message to user here
     }
   }
@@ -95,6 +103,8 @@ export class SettingsModal extends BaseModal {
   handleReset() {
     // Reset settings to defaults
     const defaultSettings = SettingsManager.resetToDefaults();
+
+    analytics.trackSettingsChange('reset_to_defaults', 'true');
 
     // Update the form with default values
     this.domManager.populateSettingsForm(defaultSettings);

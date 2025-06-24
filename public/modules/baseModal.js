@@ -1,3 +1,5 @@
+import { analytics } from './analytics.js';
+
 /**
  * Base modal class for consistent modal behavior
  */
@@ -59,6 +61,9 @@ export class BaseModal {
    */
   handleBackdropClick(event) {
     if (event.target.id === this.modalId) {
+      // Determine modal name from modal ID
+      const modalName = this.modalId.replace('Modal', '');
+      analytics.trackModalInteraction(modalName, 'close_backdrop');
       this.close();
     }
   }
@@ -68,6 +73,9 @@ export class BaseModal {
    */
   handleKeyDown(event) {
     if (event.key === 'Escape' && this.isOpen) {
+      // Determine modal name from modal ID
+      const modalName = this.modalId.replace('Modal', '');
+      analytics.trackModalInteraction(modalName, 'close_escape');
       this.close();
     }
   }

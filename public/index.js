@@ -4,6 +4,7 @@ import { DOMManager } from './modules/domManager.js';
 import { SettingsManager, SettingsModal } from './modules/settings.js';
 import { LocationManager, LocationModal } from './modules/location.js';
 import { DOM_ELEMENTS } from './modules/constants.js';
+import { analytics } from './modules/analytics.js';
 
 /**
  * Main Weather Wrangler Application
@@ -46,8 +47,11 @@ class WeatherWranglerApp {
       this.setupEventListeners();
       await this.loadInitialWeather();
       this.isInitialized = true;
+
+      analytics.trackEngagement('app_initialized');
     } catch (error) {
       console.error('Failed to initialize app:', error);
+      analytics.trackError('app_initialization_error', error.message);
       this.domManager.showError(error);
     }
   }
@@ -60,7 +64,11 @@ class WeatherWranglerApp {
     // Location toggle
     const locationToggle = this.domManager.getElement('locationToggle');
     if (locationToggle) {
-      locationToggle.addEventListener('click', () => this.locationModal.toggle());
+      locationToggle.addEventListener('click', () => {
+        analytics.trackToolbarButton('change_location');
+        analytics.trackModalInteraction('location', 'open');
+        this.locationModal.toggle();
+      });
     }
 
     // Location form submission
@@ -78,7 +86,10 @@ class WeatherWranglerApp {
     // Location modal close button
     const closeLocationModal = this.domManager.getElement('closeLocationModal');
     if (closeLocationModal) {
-      closeLocationModal.addEventListener('click', () => this.locationModal.close());
+      closeLocationModal.addEventListener('click', () => {
+        analytics.trackModalInteraction('location', 'close_button');
+        this.locationModal.close();
+      });
     }
 
     // Location modal backdrop click
@@ -90,7 +101,11 @@ class WeatherWranglerApp {
     // Settings toggle
     const settingsToggle = this.domManager.getElement(DOM_ELEMENTS.settingsToggle);
     if (settingsToggle) {
-      settingsToggle.addEventListener('click', () => this.settingsModal.toggle());
+      settingsToggle.addEventListener('click', () => {
+        analytics.trackToolbarButton('settings');
+        analytics.trackModalInteraction('settings', 'open');
+        this.settingsModal.toggle();
+      });
     }
 
     // Settings form submission
@@ -105,15 +120,24 @@ class WeatherWranglerApp {
     const resetSettings = this.domManager.getElement(DOM_ELEMENTS.resetSettings);
 
     if (closeModal) {
-      closeModal.addEventListener('click', () => this.settingsModal.close());
+      closeModal.addEventListener('click', () => {
+        analytics.trackModalInteraction('settings', 'close_button');
+        this.settingsModal.close();
+      });
     }
 
     if (cancelSettings) {
-      cancelSettings.addEventListener('click', () => this.settingsModal.close());
+      cancelSettings.addEventListener('click', () => {
+        analytics.trackModalInteraction('settings', 'cancel');
+        this.settingsModal.close();
+      });
     }
 
     if (resetSettings) {
-      resetSettings.addEventListener('click', () => this.settingsModal.handleReset());
+      resetSettings.addEventListener('click', () => {
+        analytics.trackToolbarButton('reset_settings');
+        this.settingsModal.handleReset();
+      });
     }
 
     // Modal backdrop click
@@ -131,19 +155,28 @@ class WeatherWranglerApp {
     // Use current location button (added dynamically)
     const useCurrentLocationBtn = this.domManager.getElement(DOM_ELEMENTS.useCurrentLocation);
     if (useCurrentLocationBtn) {
-      useCurrentLocationBtn.addEventListener('click', this.handleUseCurrentLocation.bind(this));
+      useCurrentLocationBtn.addEventListener('click', () => {
+        analytics.trackToolbarButton('use_current_location');
+        this.handleUseCurrentLocation();
+      });
     }
 
     // Refresh weather button
     const refreshWeatherBtn = this.domManager.getElement(DOM_ELEMENTS.refreshWeather);
     if (refreshWeatherBtn) {
-      refreshWeatherBtn.addEventListener('click', this.handleRefreshWeather.bind(this));
+      refreshWeatherBtn.addEventListener('click', () => {
+        analytics.trackToolbarButton('refresh_weather');
+        this.handleRefreshWeather();
+      });
     }
 
     // Weather details toggle
     const toggleWeatherDetails = this.domManager.getElement('toggleWeatherDetails');
     if (toggleWeatherDetails) {
-      toggleWeatherDetails.addEventListener('click', () => this.domManager.toggleAdditionalWeather());
+      toggleWeatherDetails.addEventListener('click', () => {
+        analytics.trackWeatherDisplay('toggle_details');
+        this.domManager.toggleAdditionalWeather();
+      });
     }
   }
 
@@ -249,6 +282,7 @@ class WeatherWranglerApp {
 
     try {
       const location = this.locationManager.storeZipLocation(zipCode);
+      analytics.trackLocationChange('zip_code', zipCode);
       await this.fetchWeatherForLocation(location);
     } catch (error) {
       console.error('ZIP code error:', error);
@@ -286,6 +320,7 @@ class WeatherWranglerApp {
    * Handle use current location button click
    */
   async handleUseCurrentLocation() {
+    analytics.trackLocationChange('current_location');
     this.domManager.clearZipCode();
     this.locationManager.clearStoredLocation();
     await this.requestLocationAndFetchWeather();
@@ -307,6 +342,7 @@ class WeatherWranglerApp {
    * Refresh weather data (public method for manual refresh)
    */
   async refresh() {
+    analytics.trackEngagement('manual_refresh');
     const location = this.locationManager.getStoredLocation();
     if (location) {
       // Clear cache and fetch fresh data
@@ -321,6 +357,7 @@ class WeatherWranglerApp {
    * Handle refresh weather button click
    */
   async handleRefreshWeather() {
+    analytics.trackEngagement('button_refresh');
     const location = this.locationManager.getStoredLocation();
     if (location) {
       // Clear cache and fetch fresh data
