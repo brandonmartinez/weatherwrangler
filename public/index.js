@@ -322,15 +322,16 @@ class WeatherWranglerApp {
 
 // Initialize app with Safari-compatible DOM ready check
 async function initializeApp() {
-  // Prevent multiple initializations
-  if (window.weatherApp && window.weatherApp.isInitialized) {
+  // Prevent multiple initializations - check if already initializing or initialized
+  if (window.weatherApp) {
+    console.log('Weather Wrangler already exists, skipping initialization');
     return;
   }
 
   console.log('Initializing Weather Wrangler...');
   const app = new WeatherWranglerApp();
 
-  // Make app available globally for debugging
+  // Make app available globally immediately to prevent duplicate initialization
   window.weatherApp = app;
 
   try {
@@ -357,7 +358,7 @@ domReady(initializeApp);
 
 // Additional fallback for older browsers or edge cases
 window.onload = () => {
-  if (!window.weatherApp || !window.weatherApp.isInitialized) {
+  if (!window.weatherApp) {
     console.log('Fallback initialization via window.onload');
     initializeApp();
   }
