@@ -23,6 +23,8 @@ class WeatherWranglerApp {
     this.isInitialized = false;
     this.currentWeatherData = null;
     this.currentYear = new Date().getFullYear();
+    this.lastFetchTime = 0; // Add debounce tracking
+    this.fetchDebounceMs = 1000; // Prevent duplicate fetches within 1 second
   }
 
   /**
@@ -177,14 +179,25 @@ class WeatherWranglerApp {
    * Fetch weather for a given location
    */
   async fetchWeatherForLocation(location) {
+    // Simple debounce to prevent duplicate calls
+    const now = Date.now();
+    if (now - this.lastFetchTime < this.fetchDebounceMs) {
+      console.log('🔄 Skipping duplicate weather fetch (debounced)');
+      return;
+    }
+    this.lastFetchTime = now;
+
+    console.log('🌤️ Fetching weather for location:', location);
     this.domManager.showLoading();
 
     try {
       let weatherData;
 
       if (location.zipCode) {
+        console.log('📍 Fetching weather by ZIP code:', location.zipCode);
         weatherData = await this.weatherService.fetchWeatherByZip(location.zipCode);
       } else if (location.latitude && location.longitude) {
+        console.log('📍 Fetching weather by coordinates:', location.latitude, location.longitude);
         weatherData = await this.weatherService.fetchWeatherByCoords(location.latitude, location.longitude);
       } else {
         throw new Error('Invalid location data');

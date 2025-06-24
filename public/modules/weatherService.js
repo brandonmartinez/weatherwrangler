@@ -13,10 +13,12 @@ export class WeatherService {
    * Fetch weather data by coordinates with caching
    */
   async fetchWeatherByCoords(lat, lon) {
+    console.log('🌐 WeatherService: fetchWeatherByCoords called for coords:', lat, lon);
     const cacheKey = `coords_${lat}_${lon}`;
     const cachedData = this.getCachedWeather(cacheKey);
 
     if (cachedData) {
+      console.log('📄 WeatherService: Using cached data for coords:', lat, lon);
       return cachedData;
     }
 
@@ -24,6 +26,7 @@ export class WeatherService {
       throw new Error('Weather API key not configured. Please check your .env file or GitHub secrets.');
     }
 
+    console.log('🌍 WeatherService: Making API request for coords:', lat, lon);
     const url = `${this.baseUrl}?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=imperial`;
     const data = await this.makeApiRequest(url);
 
@@ -40,10 +43,12 @@ export class WeatherService {
    * Fetch weather data by ZIP code with caching
    */
   async fetchWeatherByZip(zipCode) {
+    console.log('🌐 WeatherService: fetchWeatherByZip called for ZIP:', zipCode);
     const cacheKey = `zip_${zipCode}`;
     const cachedData = this.getCachedWeather(cacheKey);
 
     if (cachedData) {
+      console.log('📄 WeatherService: Using cached data for ZIP:', zipCode);
       return cachedData;
     }
 
@@ -51,6 +56,7 @@ export class WeatherService {
       throw new Error('Weather API key not configured. Please check your .env file or GitHub secrets.');
     }
 
+    console.log('🌍 WeatherService: Making API request for ZIP:', zipCode);
     const url = `${this.baseUrl}?zip=${zipCode}&appid=${this.apiKey}&units=imperial`;
     const data = await this.makeApiRequest(url);
 

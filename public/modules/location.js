@@ -159,7 +159,7 @@ export class LocationModal extends BaseModal {
   /**
    * Handle location form submission
    */
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
 
     try {
@@ -177,9 +177,9 @@ export class LocationModal extends BaseModal {
       const location = this.locationManager.storeZipLocation(zipCode);
       this.close();
 
-      // Trigger weather refresh
+      // Trigger weather refresh after location change
       if (window.weatherApp) {
-        window.weatherApp.fetchWeatherForLocation(location);
+        await window.weatherApp.fetchWeatherForLocation(location);
       }
 
       console.log('Location updated:', location);

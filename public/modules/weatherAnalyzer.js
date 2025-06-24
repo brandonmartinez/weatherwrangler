@@ -16,7 +16,7 @@ export class WeatherAnalyzer {
       throw new Error('No weather forecast data available for today');
     }
 
-    const conditions = this.analyzeForecasts(todayForecasts);
+    const conditions = this.analyzeForecasts(todayForecasts, weatherData.city);
     const recommendations = this.generateRecommendations(conditions, settings);
 
     // Debug logging
@@ -82,7 +82,7 @@ export class WeatherAnalyzer {
   /**
    * Analyze forecast data to extract max conditions and rain timing
    */
-  static analyzeForecasts(forecasts) {
+  static analyzeForecasts(forecasts, cityData = null) {
     let maxTemp = -Infinity;
     let minTemp = Infinity;
     let maxRainChance = 0;
@@ -95,10 +95,9 @@ export class WeatherAnalyzer {
     let weatherConditions = [];
     let weatherDescriptions = [];
 
-    // Get sunrise/sunset from the first forecast (should be same for all today's forecasts)
-    const firstForecast = forecasts[0];
-    const sunrise = firstForecast?.sys?.sunrise;
-    const sunset = firstForecast?.sys?.sunset;
+    // Get sunrise/sunset from city data (not from individual forecasts)
+    const sunrise = cityData?.sunrise;
+    const sunset = cityData?.sunset;
 
     for (const forecast of forecasts) {
       // Temperature analysis

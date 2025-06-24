@@ -13,7 +13,7 @@ export class DOMManager {
    * Toggle additional weather details visibility
    */
   toggleAdditionalWeather() {
-    const additionalCards = ['humidityCard', 'visibilityCard', 'uvIndexCard', 'sunriseCard'];
+    const additionalCards = ['humidityCard', 'visibilityCard', 'sunriseCard']; // Removed uvIndexCard
     const toggleText = this.getElement('toggleText');
 
     const firstCard = this.getElement(additionalCards[0]);
@@ -203,15 +203,15 @@ export class DOMManager {
     const weatherDescription = result.weatherDescription || 'Clear skies';
     const weatherIcon = this.getWeatherIcon(result.weatherCondition);
 
-    // Format UV Index with color coding
-    const uvIndexElement = this.getElement('uvIndex');
-    if (uvIndexElement && result.uvIndex !== undefined) {
-      const uvValue = Math.round(result.uvIndex);
-      const uvColor = this.getUVIndexColor(uvValue);
-      uvIndexElement.innerHTML = `<span class="${uvColor}">${uvValue}</span>`;
-    }
+    // Format UV Index with color coding - Remove this since 5-day forecast API doesn't provide UV index
+    // const uvIndexElement = this.getElement('uvIndex');
+    // if (uvIndexElement && result.uvIndex !== undefined) {
+    //   const uvValue = Math.round(result.uvIndex);
+    //   const uvColor = this.getUVIndexColor(uvValue);
+    //   uvIndexElement.innerHTML = `<span class="${uvColor}">${uvValue}</span>`;
+    // }
 
-    // Format sunrise/sunset times
+    // Format sunrise/sunset times - show next upcoming event
     const formatTime = (timestamp) => {
       if (!timestamp) return '--:--';
       return new Date(timestamp * 1000).toLocaleTimeString('en-US', {
@@ -220,6 +220,32 @@ export class DOMManager {
         hour12: true
       });
     };
+
+    // Determine whether to show sunrise or sunset based on current time
+    const now = new Date();
+    const currentTime = now.getTime() / 1000; // Convert to Unix timestamp
+    let sunEventTime = '--:--';
+    let sunEventLabel = 'Sun';
+    let sunEventIcon = '🌅';
+
+    if (result.sunrise && result.sunset) {
+      if (currentTime < result.sunrise) {
+        // Before sunrise - show sunrise
+        sunEventTime = formatTime(result.sunrise);
+        sunEventLabel = 'Sunrise';
+        sunEventIcon = '🌅';
+      } else if (currentTime < result.sunset) {
+        // After sunrise but before sunset - show sunset
+        sunEventTime = formatTime(result.sunset);
+        sunEventLabel = 'Sunset';
+        sunEventIcon = '🌇';
+      } else {
+        // After sunset - show tomorrow's sunrise (add 24 hours as approximation)
+        sunEventTime = formatTime(result.sunrise + 86400);
+        sunEventLabel = 'Sunrise';
+        sunEventIcon = '🌅';
+      }
+    }
 
     const elements = {
       [DOM_ELEMENTS.weatherDate]: dateString,
@@ -233,8 +259,14 @@ export class DOMManager {
       'lowTemp': result.minTemp || '--',
       'humidity': result.humidity || '--',
       'visibility': result.visibility ? Math.round(result.visibility / 1000 * 0.621371) : '--', // Convert m to miles
-      'sunrise': formatTime(result.sunrise)
+      'sunrise': sunEventTime
     };
+
+    // Update sun event label and icon
+    const sunriseLabel = this.getElement('sunriseLabel');
+    if (sunriseLabel) {
+      sunriseLabel.textContent = `${sunEventIcon} ${sunEventLabel}`;
+    }
 
     // Update weather icon
     const iconElement = this.getElement('weatherIcon');

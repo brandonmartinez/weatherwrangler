@@ -305,17 +305,18 @@
               </div>
             </div>
             <div class="hidden col-span-1"></div>
-            <div class="hidden col-span-4 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg" id="uvIndexCard">
+            <!-- Remove UV Index card since 5-day forecast API doesn't provide UV data -->
+            <!-- <div class="hidden col-span-4 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg" id="uvIndexCard">
               <div class="flex justify-between items-center">
                 <div class="text-gray-600 text-sm dark:text-gray-300">🌡️ UV Index</div>
                 <div class="font-semibold" id="uvIndex">
                   <span class="text-gray-700 dark:text-gray-200">--</span>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="hidden col-span-4 bg-gray-50 dark:bg-gray-700 p-3 rounded-lg" id="sunriseCard">
               <div class="flex justify-between items-center">
-                <div class="text-gray-600 text-sm dark:text-gray-300">🌅 Sunrise</div>
+                <div class="text-gray-600 text-sm dark:text-gray-300" id="sunriseLabel">🌅 Sunrise</div>
                 <div class="font-semibold text-gray-700 dark:text-gray-200" id="sunrise">
                   --:--
                 </div>
