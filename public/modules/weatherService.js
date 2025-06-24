@@ -7,6 +7,7 @@ export class WeatherService {
   constructor(apiKey) {
     this.apiKey = apiKey;
     this.baseUrl = 'https://api.openweathermap.org/data/2.5/forecast';
+    this.geocodingUrl = 'https://api.openweathermap.org/geo/1.0/zip';
   }
 
   /**
@@ -40,6 +41,39 @@ export class WeatherService {
   }
 
   /**
+   * Convert ZIP code to coordinates using geocoding API
+   */
+  async getCoordinatesFromZip(zipCode) {
+    console.log('🌐 WeatherService: Converting ZIP to coordinates:', zipCode);
+
+    if (!this.apiKey || this.apiKey === 'WEATHER_API_KEY_PLACEHOLDER') {
+      throw new Error('Weather API key not configured. Please check your .env file or GitHub secrets.');
+    }
+
+    const url = `${this.geocodingUrl}?zip=${zipCode}&appid=${this.apiKey}`;
+
+    try {
+      const response = await this.makeApiRequest(url);
+
+      if (!response.lat || !response.lon) {
+        throw new Error(`Invalid ZIP code: ${zipCode}`);
+      }
+
+      return {
+        lat: response.lat,
+        lon: response.lon,
+        name: response.name,
+        country: response.country
+      };
+    } catch (error) {
+      if (error.message.includes('404')) {
+        throw new Error(`ZIP code not found: ${zipCode}`);
+      }
+      throw error;
+    }
+  }
+
+  /**
    * Fetch weather data by ZIP code with caching
    */
   async fetchWeatherByZip(zipCode) {
@@ -52,22 +86,31 @@ export class WeatherService {
       return cachedData;
     }
 
-    if (!this.apiKey || this.apiKey === 'WEATHER_API_KEY_PLACEHOLDER') {
-      throw new Error('Weather API key not configured. Please check your .env file or GitHub secrets.');
-    }
+    // First, convert ZIP code to coordinates using geocoding API
+    const coordinates = await this.getCoordinatesFromZip(zipCode);
+    console.log('📍 WeatherService: Got coordinates for ZIP:', zipCode, coordinates);
 
-    console.log('🌍 WeatherService: Making API request for ZIP:', zipCode);
-    const url = `${this.baseUrl}?zip=${zipCode}&appid=${this.apiKey}&units=imperial`;
+    // Then fetch weather data using coordinates
+    console.log('🌍 WeatherService: Making weather API request for ZIP:', zipCode);
+    const url = `${this.baseUrl}?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${this.apiKey}&units=imperial`;
     const data = await this.makeApiRequest(url);
 
-    // Store location for future use
-    localStorage.setItem(STORAGE_KEYS.WEATHER_LOCATION, JSON.stringify({ zipCode }));
+    // Store location for future use, including the resolved city name
+    const locationData = {
+      zipCode,
+      lat: coordinates.lat,
+      lon: coordinates.lon,
+      name: coordinates.name,
+      country: coordinates.country
+    };
+    localStorage.setItem(STORAGE_KEYS.WEATHER_LOCATION, JSON.stringify(locationData));
     this.cacheWeather(cacheKey, data);
 
     // Add current timestamp for fresh data
     return {
       ...data,
-      cacheTimestamp: Date.now()
+      cacheTimestamp: Date.now(),
+      locationInfo: coordinates
     };
   }
 
